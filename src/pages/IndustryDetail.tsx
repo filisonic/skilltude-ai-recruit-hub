@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { useParams, Navigate } from 'react-router-dom';
 import Header from '@/components/Header';
@@ -306,7 +305,7 @@ const industriesData = {
     buttonColor: 'bg-violet-600 hover:bg-violet-700',
     image: 'https://images.unsplash.com/photo-1487058792275-0ad4aaf24ca7',
     description: 'Specialized recruitment for game development, augmented reality, and virtual reality technologies.',
-    longDescription: 'Gaming, augmented reality, and virtual reality are at the forefront of immersive digital experiences, transforming entertainment, education, training, and collaboration. As XR technologies become more sophisticated and accessible, companies need specialized talent who understand both the technical aspects of 3D rendering, spatial computing, and interaction design, as well as the creative elements that make immersive experiences compelling. Our gaming and XR recruiters help studios and tech companies build teams that can push the boundaries of what's possible in virtual worlds.',
+    longDescription: 'Gaming, augmented reality, and virtual reality are at the forefront of immersive digital experiences, transforming entertainment, education, training, and collaboration. As XR technologies become more sophisticated and accessible, companies need specialized talent who understand both the technical aspects of 3D rendering, spatial computing, and interaction design, as well as the creative elements that make immersive experiences compelling. Our gaming and XR recruiters help studios and tech companies build teams that can push the boundaries of what is possible in virtual worlds.',
     keyRoles: [
       'Game Developer',
       'XR/AR/VR Engineer',
