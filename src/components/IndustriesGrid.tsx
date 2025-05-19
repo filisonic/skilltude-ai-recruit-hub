@@ -2,6 +2,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Card, CardContent } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 
 const industries = [
   { id: 'ai-ml', name: 'AI & Machine Learning', icon: '🧠' },
@@ -59,6 +60,3 @@ const IndustriesGrid = () => {
 };
 
 export default IndustriesGrid;
-
-// Import Button at the top
-import { Button } from '@/components/ui/button';
