@@ -198,7 +198,7 @@ const industriesData = {
       '35% of embedded developers now working on AI/ML integration',
       '$198 billion market size for embedded systems by 2025'
     ],
-    lucideIcon: Chip
+    lucideIcon: Computer
   },
   'blockchain': {
     name: 'Blockchain & Crypto',
