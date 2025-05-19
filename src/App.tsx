@@ -11,6 +11,9 @@ import Industries from "./pages/Industries";
 import Blog from "./pages/Blog";
 import Contact from "./pages/Contact";
 import ClientLogin from "./pages/ClientLogin";
+import HireCandidate from "./pages/HireCandidate";
+import UploadCV from "./pages/UploadCV";
+import Demo from "./pages/Demo";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -29,6 +32,9 @@ const App = () => (
           <Route path="/blog" element={<Blog />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/client-login" element={<ClientLogin />} />
+          <Route path="/hire-candidate" element={<HireCandidate />} />
+          <Route path="/upload-cv" element={<UploadCV />} />
+          <Route path="/demo" element={<Demo />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
