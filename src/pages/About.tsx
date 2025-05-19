@@ -25,13 +25,13 @@ const About = () => {
               <div>
                 <h2 className="text-3xl font-bold mb-6">Our Story</h2>
                 <p className="text-lg text-gray-700 mb-6">
-                  Founded in 2015, SkillTude was born out of a simple observation: traditional recruitment methods weren't keeping pace with the rapidly evolving tech industry.
+                  SkillTude was born out of a simple observation: traditional recruitment methods weren't keeping pace with the rapidly evolving tech industry.
                 </p>
                 <p className="text-lg text-gray-700 mb-6">
-                  Our founder, Dr. Maya Thompson, a former tech executive and AI researcher, recognized the need for a specialized recruitment approach that could understand the nuanced requirements of technical roles while leveraging AI to streamline the matching process.
+                  Our team of experienced HR professionals and AI researchers recognized the need for a specialized recruitment approach that could understand the nuanced requirements of technical roles while leveraging AI to streamline the matching process.
                 </p>
                 <p className="text-lg text-gray-700">
-                  Today, SkillTude has grown into a leading HR consultancy serving clients across the globe, from Silicon Valley startups to Fortune 500 enterprises, all while maintaining our core commitment to connecting brilliant minds with innovative companies.
+                  Today, SkillTude has grown into a leading HR consultancy serving clients across the globe, from innovative startups to established enterprises, all while maintaining our core commitment to connecting brilliant minds with forward-thinking companies.
                 </p>
               </div>
               
@@ -85,14 +85,14 @@ const About = () => {
                 <div className="mb-4">
                   <img 
                     src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-4.0.3" 
-                    alt="Dr. Maya Thompson" 
+                    alt="Chief Executive Officer" 
                     className="w-40 h-40 rounded-full mx-auto object-cover"
                   />
                 </div>
-                <h3 className="text-xl font-bold">Dr. Maya Thompson</h3>
+                <h3 className="text-xl font-bold">Chief Executive Officer</h3>
                 <p className="text-primary mb-2">Founder & CEO</p>
                 <p className="text-gray-600">
-                  Former AI researcher and tech executive with 15+ years of industry experience.
+                  AI researcher and tech executive with extensive industry experience.
                 </p>
               </div>
               
@@ -101,12 +101,12 @@ const About = () => {
                 <div className="mb-4">
                   <img 
                     src="https://images.unsplash.com/photo-1519345182560-3f2917c472ef?ixlib=rb-4.0.3" 
-                    alt="David Chen" 
+                    alt="Chief Technology Officer" 
                     className="w-40 h-40 rounded-full mx-auto object-cover"
                   />
                 </div>
-                <h3 className="text-xl font-bold">David Chen</h3>
-                <p className="text-primary mb-2">Chief Technology Officer</p>
+                <h3 className="text-xl font-bold">Chief Technology Officer</h3>
+                <p className="text-primary mb-2">CTO</p>
                 <p className="text-gray-600">
                   Machine learning expert specializing in recruitment algorithms and AI systems.
                 </p>
@@ -117,43 +117,15 @@ const About = () => {
                 <div className="mb-4">
                   <img 
                     src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?ixlib=rb-4.0.3" 
-                    alt="Priya Sharma" 
+                    alt="Head of Client Success" 
                     className="w-40 h-40 rounded-full mx-auto object-cover"
                   />
                 </div>
-                <h3 className="text-xl font-bold">Priya Sharma</h3>
-                <p className="text-primary mb-2">Head of Client Success</p>
+                <h3 className="text-xl font-bold">Head of Client Success</h3>
+                <p className="text-primary mb-2">Client Success</p>
                 <p className="text-gray-600">
                   HR professional with extensive experience in talent acquisition and client relations.
                 </p>
-              </div>
-            </div>
-          </div>
-        </section>
-        
-        <section className="bg-primary py-16 text-white">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <h2 className="text-3xl font-bold mb-8">Our Awards & Recognition</h2>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-              <div className="p-6 bg-white/10 rounded-lg">
-                <h3 className="text-xl font-semibold mb-2">HR Tech Innovator</h3>
-                <p className="opacity-80">TechCrunch, 2022</p>
-              </div>
-              
-              <div className="p-6 bg-white/10 rounded-lg">
-                <h3 className="text-xl font-semibold mb-2">Best AI Recruitment Solution</h3>
-                <p className="opacity-80">HR Technology Awards, 2021</p>
-              </div>
-              
-              <div className="p-6 bg-white/10 rounded-lg">
-                <h3 className="text-xl font-semibold mb-2">Top 50 Tech Startups</h3>
-                <p className="opacity-80">Forbes, 2020</p>
-              </div>
-              
-              <div className="p-6 bg-white/10 rounded-lg">
-                <h3 className="text-xl font-semibold mb-2">Excellence in Candidate Experience</h3>
-                <p className="opacity-80">Talent Board, 2019</p>
               </div>
             </div>
           </div>
