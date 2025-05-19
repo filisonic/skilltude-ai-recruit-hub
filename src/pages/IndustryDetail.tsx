@@ -358,7 +358,7 @@ const industriesData = {
       '$12.7 trillion annual economic output from engineering industries',
       '16% projected growth in advanced engineering roles by 2030'
     ],
-    lucideIcon: Chip
+    lucideIcon: Computer
   },
   'life-science': {
     name: 'Life Science',
