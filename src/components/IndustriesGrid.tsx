@@ -36,7 +36,7 @@ const IndustriesGrid = () => {
         
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {industries.map((industry) => (
-            <Link to={`/industries/${industry.id}`} key={industry.id}>
+            <Link to={`/industries/${industry.id}`} key={industry.id} state={{ scrollToTop: true }}>
               <Card className="h-full card-hover">
                 <CardContent className="p-6 text-center">
                   <div className="text-4xl mb-3">{industry.icon}</div>

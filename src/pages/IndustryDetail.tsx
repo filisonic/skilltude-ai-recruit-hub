@@ -1,5 +1,6 @@
-import React from 'react';
-import { useParams, Navigate } from 'react-router-dom';
+
+import React, { useEffect } from 'react';
+import { useParams, Navigate, useLocation } from 'react-router-dom';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { Button } from '@/components/ui/button';
@@ -524,7 +525,13 @@ const industriesData = {
 
 const IndustryDetail = () => {
   const { industryId } = useParams<{ industryId: string }>();
+  const location = useLocation();
   const industry = industryId ? industriesData[industryId as keyof typeof industriesData] : null;
+  
+  useEffect(() => {
+    // Scroll to top when component mounts or when location changes
+    window.scrollTo(0, 0);
+  }, [location.pathname]);
   
   if (!industry) {
     return <Navigate to="/industries" replace />;

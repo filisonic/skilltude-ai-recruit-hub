@@ -44,7 +44,7 @@ const Industries = () => {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
               {industries.map((industry) => (
-                <Link to={`/industries/${industry.id}`} key={industry.id}>
+                <Link to={`/industries/${industry.id}`} state={{ scrollToTop: true }} key={industry.id}>
                   <Card className="h-full card-hover">
                     <CardContent className="p-6">
                       <div className="text-4xl mb-4">{industry.icon}</div>
