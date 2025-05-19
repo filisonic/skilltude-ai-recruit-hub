@@ -4,7 +4,7 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
-import { Chip, Cpu, MicrochipIcon, CircuitBoard } from 'lucide-react';
+import { Cpu, MicrochipIcon, CircuitBoard, Computer } from 'lucide-react';
 
 // Industry data with detailed information
 const industriesData = {
@@ -70,7 +70,7 @@ const industriesData = {
       '200,000+ specialized engineering roles needed in the next decade',
       '7% annual growth rate despite cyclical market dynamics'
     ],
-    lucideIcon: Chip
+    lucideIcon: Computer
   },
   'automotive': {
     name: 'Automotive',
