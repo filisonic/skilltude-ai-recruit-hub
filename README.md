@@ -1,73 +1,34 @@
-# Welcome to your Lovable project
+# Skilltude AI Recruit Hub
 
-## Project info
+A modern AI-driven recruitment platform connecting tech talent with employers across 16 specialized sectors.
 
-**URL**: https://lovable.dev/projects/ce4e499d-63a9-4690-8829-6baf9dcffcb3
+## Getting Started
 
-## How can I edit this code?
+1. Clone the repository
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+3. Start the development server:
+   ```bash
+   npm run dev
+   ```
 
-There are several ways of editing your application.
+## Development
 
-**Use Lovable**
-
-Simply visit the [Lovable Project](https://lovable.dev/projects/ce4e499d-63a9-4690-8829-6baf9dcffcb3) and start prompting.
-
-Changes made via Lovable will be committed automatically to this repo.
-
-**Use your preferred IDE**
-
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
-
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
-
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
-```
-
-**Edit a file directly in GitHub**
-
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
-
-**Use GitHub Codespaces**
-
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
-
-## What technologies are used for this project?
-
-This project is built with:
-
-- Vite
-- TypeScript
+The project is built with:
 - React
-- shadcn-ui
+- TypeScript
 - Tailwind CSS
+- Vite
 
-## How can I deploy this project?
+## Deployment
 
-Simply open [Lovable](https://lovable.dev/projects/ce4e499d-63a9-4690-8829-6baf9dcffcb3) and click on Share -> Publish.
+The project can be deployed to any static hosting service that supports Node.js applications.
 
-## Can I connect a custom domain to my Lovable project?
+## Custom Domain Setup
 
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+To set up a custom domain:
+1. Configure your DNS settings to point to your hosting provider
+2. Set up SSL certificates
+3. Configure your hosting provider to serve the application from your custom domain

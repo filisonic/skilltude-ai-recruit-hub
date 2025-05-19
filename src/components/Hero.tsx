@@ -28,7 +28,7 @@ const Hero = () => {
           </div>
           
           <div className="hidden lg:block">
-            <img alt="AI-Driven Recruitment" className="rounded-lg shadow-xl w-full h-auto object-cover" src="/lovable-uploads/a53ed9a2-e07f-4140-8b5f-22f39626cc0a.png" />
+            <img alt="AI-Driven Recruitment" className="rounded-lg shadow-xl w-full h-auto object-cover" src="/images/hero-image.png" />
           </div>
         </div>
       </div>
