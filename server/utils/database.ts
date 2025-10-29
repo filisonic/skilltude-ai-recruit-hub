@@ -3,7 +3,7 @@
  */
 
 import mysql from 'mysql2/promise';
-import { dbConfig } from '../config';
+import { dbConfig } from '../config/index.js';
 
 let pool: mysql.Pool | null = null;
 

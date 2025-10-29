@@ -6,9 +6,9 @@
 import fs from 'fs/promises';
 import path from 'path';
 import { v4 as uuidv4 } from 'uuid';
-import { CVMetadata, FileMetadata, CVUploadException, ErrorCodes } from '../types/cv.types';
-import { config } from '../config';
-import { logFileOperation } from '../utils/logger';
+import { CVMetadata, FileMetadata, CVUploadException, ErrorCodes } from '../types/cv.types.js';
+import { config } from '../config/index.js';
+import { logFileOperation } from '../utils/logger.js';
 
 /**
  * Magic numbers (file signatures) for supported file types

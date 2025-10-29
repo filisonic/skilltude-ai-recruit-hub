@@ -5,7 +5,7 @@
  */
 
 import nodemailer, { Transporter } from 'nodemailer';
-import { config } from '../config/index';
+import { config } from '../config/index.js';
 import {
   CVAnalysisResult,
   UserData,
@@ -13,7 +13,7 @@ import {
   CVUploadException,
   ErrorCodes,
   Improvement,
-} from '../types/cv.types';
+} from '../types/cv.types.js';
 
 /**
  * Email Service for sending CV analysis results

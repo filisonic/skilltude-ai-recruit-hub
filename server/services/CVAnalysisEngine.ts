@@ -17,8 +17,8 @@ import {
   Improvement,
   CVUploadException,
   ErrorCodes,
-} from '../types/cv.types';
-import { logCVAnalysis } from '../utils/logger';
+} from '../types/cv.types.js';
+import { logCVAnalysis } from '../utils/logger.js';
 
 export class CVAnalysisEngine {
   // Common action verbs used in professional CVs

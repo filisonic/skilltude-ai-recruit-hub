@@ -4,12 +4,12 @@
 
 import express, { Request, Response, NextFunction } from 'express';
 import { body, query as validateQuery, param, validationResult } from 'express-validator';
-import { authenticate, requireRole } from '../middleware/auth';
-import { adminLimiter } from '../middleware/rateLimiter';
-import { query } from '../utils/database';
-import { CVUploadException, ErrorCodes, logError } from '../utils/errors';
-import { FileStorageService } from '../services/FileStorageService';
-import logger, { logFileOperation } from '../utils/logger';
+import { authenticate, requireRole } from '../middleware/auth.js';
+import { adminLimiter } from '../middleware/rateLimiter.js';
+import { query } from '../utils/database.js';
+import { CVUploadException, ErrorCodes, logError } from '../utils/errors.js';
+import { FileStorageService } from '../services/FileStorageService.js';
+import logger, { logFileOperation } from '../utils/logger.js';
 import {
   CVSubmission,
   CVSubmissionDetail,
@@ -17,11 +17,11 @@ import {
   CVSubmissionsResponse,
   CVSubmissionUpdate,
   CVAnalysisResult,
-} from '../types/cv.types';
+} from '../types/cv.types.js';
 import path from 'path';
 import fs from 'fs/promises';
-import { sanitizeSearchQuery, sanitizeNotes } from '../utils/sanitization';
-import { logFileDownload, logAdminAction, validateFileAccess } from '../utils/accessControl';
+import { sanitizeSearchQuery, sanitizeNotes } from '../utils/sanitization.js';
+import { logFileDownload, logAdminAction, validateFileAccess } from '../utils/accessControl.js';
 
 const router = express.Router();
 const fileStorage = new FileStorageService();

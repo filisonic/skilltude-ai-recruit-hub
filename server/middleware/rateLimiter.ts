@@ -3,9 +3,9 @@
  */
 
 import rateLimit from 'express-rate-limit';
-import { config } from '../config';
-import { ErrorCodes } from '../utils/errors';
-import { logSecurityEvent } from '../utils/logger';
+import { config } from '../config/index.js';
+import { ErrorCodes } from '../utils/errors.js';
+import { logSecurityEvent } from '../utils/logger.js';
 
 /**
  * Rate limiter for CV uploads

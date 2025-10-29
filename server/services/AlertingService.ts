@@ -6,7 +6,7 @@
 import monitoringService from './MonitoringService.js';
 import logger from '../utils/logger.js';
 import nodemailer from 'nodemailer';
-import { config } from '../config';
+import { config } from '../config/index.js';
 
 export interface AlertConfig {
   uploadFailureRateThreshold: number; // percentage

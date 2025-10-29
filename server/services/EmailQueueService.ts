@@ -7,8 +7,8 @@
 import { PoolConnection } from 'mysql2/promise';
 import { EmailService } from './EmailService.js';
 import { CVAnalysisResult, UserData } from '../types/cv.types.js';
-import { getPool } from '../utils/database';
-import logger, { logEmailDelivery } from '../utils/logger';
+import { getPool } from '../utils/database.js';
+import logger, { logEmailDelivery } from '../utils/logger.js';
 
 interface QueuedEmail {
   id: number;

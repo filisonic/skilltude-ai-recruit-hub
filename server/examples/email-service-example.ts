@@ -4,7 +4,7 @@
  * This file demonstrates how to use the EmailService to send CV analysis emails
  */
 
-import { EmailService } from '../services/EmailService';
+import { EmailService } from '../services/EmailService.js';
 import { CVAnalysisResult, UserData } from '../types/cv.types';
 
 /**

@@ -3,11 +3,11 @@
  * Tracks system metrics and performance indicators
  */
 
-import { query } from '../utils/database';
-import logger from '../utils/logger';
+import { query } from '../utils/database.js';
+import logger from '../utils/logger.js';
 import fs from 'fs/promises';
 import path from 'path';
-import { config } from '../config';
+import { config } from '../config/index.js';
 
 export interface SystemMetrics {
   uploadMetrics: UploadMetrics;

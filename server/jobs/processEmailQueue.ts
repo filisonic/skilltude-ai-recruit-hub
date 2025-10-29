@@ -10,8 +10,8 @@
  *   ts-node server/jobs/processEmailQueue.ts
  */
 
-import { EmailQueueService } from '../services/EmailQueueService';
-import { EmailService } from '../services/EmailService';
+import { EmailQueueService } from '../services/EmailQueueService.js';
+import { EmailService } from '../services/EmailService.js';
 
 /**
  * Main function to process the email queue

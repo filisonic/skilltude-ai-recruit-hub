@@ -9,8 +9,8 @@
  * Replace (star) with * in the actual cron command
  */
 
-import alertingService from '../services/AlertingService';
-import logger from '../utils/logger';
+import alertingService from '../services/AlertingService.js';
+import logger from '../utils/logger.js';
 
 async function checkAlerts() {
   logger.info('Starting alert check', {

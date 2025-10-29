@@ -4,9 +4,9 @@
 
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
-import { jwtConfig } from '../config';
-import { CVUploadException, ErrorCodes } from '../utils/errors';
-import { query } from '../utils/database';
+import { jwtConfig } from '../config/index.js';
+import { CVUploadException, ErrorCodes } from '../utils/errors.js';
+import { query } from '../utils/database.js';
 
 // Extend Express Request type to include user
 declare global {

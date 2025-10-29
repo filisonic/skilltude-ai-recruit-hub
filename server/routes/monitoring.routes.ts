@@ -4,10 +4,10 @@
  */
 
 import express, { Request, Response } from 'express';
-import { authenticate, requireRole } from '../middleware/auth';
-import { adminLimiter } from '../middleware/rateLimiter';
-import monitoringService from '../services/MonitoringService';
-import logger from '../utils/logger';
+import { authenticate, requireRole } from '../middleware/auth.js';
+import { adminLimiter } from '../middleware/rateLimiter.js';
+import monitoringService from '../services/MonitoringService.js';
+import logger from '../utils/logger.js';
 
 const router = express.Router();
 

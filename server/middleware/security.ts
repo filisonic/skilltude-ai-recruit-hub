@@ -3,8 +3,8 @@
  */
 
 import { Request, Response, NextFunction } from 'express';
-import { ErrorCodes, CVUploadException } from '../utils/errors';
-import logger, { logSecurityEvent as logSecurityEventToLogger } from '../utils/logger';
+import { ErrorCodes, CVUploadException } from '../utils/errors.js';
+import logger, { logSecurityEvent as logSecurityEventToLogger } from '../utils/logger.js';
 
 /**
  * Simple CSRF protection middleware
