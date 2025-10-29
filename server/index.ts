@@ -42,9 +42,24 @@ app.use(helmet({
 // Additional security headers
 app.use(securityHeaders);
 
-// CORS configuration
+// CORS configuration - support both www and non-www
+const allowedOrigins = [
+  serverConfig.frontendUrl,
+  serverConfig.frontendUrl.replace('://www.', '://'),
+  serverConfig.frontendUrl.replace('://', '://www.'),
+].filter((v, i, a) => a.indexOf(v) === i); // Remove duplicates
+
 app.use(cors({
-  origin: serverConfig.frontendUrl,
+  origin: (origin, callback) => {
+    // Allow requests with no origin (like mobile apps or Postman)
+    if (!origin) return callback(null, true);
+    
+    if (allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Invalid request origin'));
+    }
+  },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
