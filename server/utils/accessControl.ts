@@ -4,7 +4,7 @@
  */
 
 import { Request } from 'express';
-import logger, { logAdminAction as logAdminActionToLogger, logSecurityEvent } from './logger';
+import logger, { logAdminAction as logAdminActionToLogger, logSecurityEvent } from './logger.js';
 
 /**
  * Access event types

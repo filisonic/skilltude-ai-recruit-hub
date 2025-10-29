@@ -3,8 +3,8 @@
  * Monitors system metrics and sends alerts for critical issues
  */
 
-import monitoringService from './MonitoringService';
-import logger from '../utils/logger';
+import monitoringService from './MonitoringService.js';
+import logger from '../utils/logger.js';
 import nodemailer from 'nodemailer';
 import { config } from '../config';
 

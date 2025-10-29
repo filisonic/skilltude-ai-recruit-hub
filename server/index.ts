@@ -5,7 +5,7 @@
 import express, { Express, Request, Response, NextFunction } from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
-import { serverConfig, validateConfig } from './config';
+import { serverConfig, validateConfig } from './config/index.js';
 
 // Validate configuration on startup
 validateConfig();
@@ -17,8 +17,8 @@ const PORT = serverConfig.port;
 // Middleware
 // ============================================================================
 
-import { apiLimiter } from './middleware/rateLimiter';
-import { securityHeaders, enforceHttps, hstsHeader } from './middleware/security';
+import { apiLimiter } from './middleware/rateLimiter.js';
+import { securityHeaders, enforceHttps, hstsHeader } from './middleware/security.js';
 
 // HTTPS enforcement (must be first)
 app.use(enforceHttps);
@@ -71,22 +71,22 @@ app.get('/api/health', (req: Request, res: Response) => {
 });
 
 // CV upload routes
-import cvRoutes from './routes/cv.routes';
+import cvRoutes from './routes/cv.routes.js';
 app.use('/api/cv', cvRoutes);
 
 // Admin CV management routes
-import adminCvRoutes from './routes/admin-cv.routes';
+import adminCvRoutes from './routes/admin-cv.routes.js';
 app.use('/api/admin', adminCvRoutes);
 
 // Monitoring routes
-import monitoringRoutes from './routes/monitoring.routes';
+import monitoringRoutes from './routes/monitoring.routes.js';
 app.use('/api/monitoring', monitoringRoutes);
 
 // ============================================================================
 // Error Handling
 // ============================================================================
 
-import { createErrorResponse, logError, CVUploadException } from './utils/errors';
+import { createErrorResponse, logError, CVUploadException } from './utils/errors.js';
 
 // 404 handler
 app.use((req: Request, res: Response) => {

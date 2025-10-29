@@ -5,8 +5,8 @@
  */
 
 import { PoolConnection } from 'mysql2/promise';
-import { EmailService } from './EmailService';
-import { CVAnalysisResult, UserData } from '../types/cv.types';
+import { EmailService } from './EmailService.js';
+import { CVAnalysisResult, UserData } from '../types/cv.types.js';
 import { getPool } from '../utils/database';
 import logger, { logEmailDelivery } from '../utils/logger';
 
