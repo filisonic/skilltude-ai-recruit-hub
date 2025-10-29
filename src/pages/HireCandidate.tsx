@@ -2,6 +2,7 @@
 import React from 'react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import PageLayout from '@/components/PageLayout';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -18,7 +19,8 @@ const HireCandidate = () => {
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
-      <main className="flex-grow bg-gray-50 py-16">
+      <PageLayout>
+        <main className="flex-grow bg-gray-50 py-16">
         <div className="max-w-4xl mx-auto px-4 sm:px-6">
           <div className="text-center mb-12">
             <h1 className="text-3xl md:text-4xl font-bold mb-4">Hire Top Tech Talent</h1>
@@ -77,7 +79,8 @@ const HireCandidate = () => {
             </CardContent>
           </Card>
         </div>
-      </main>
+        </main>
+      </PageLayout>
       <Footer />
     </div>
   );

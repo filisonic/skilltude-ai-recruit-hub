@@ -18,12 +18,12 @@ const IndustryCta = ({ industry }: IndustryCtaProps) => {
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Link to="/contact">
-            <Button className="bg-white text-gray-900 hover:bg-gray-200 px-6 py-3 rounded-md text-lg w-full sm:w-auto">
+            <Button className="bg-gradient-to-r from-lime-500 to-lime-600 hover:from-lime-600 hover:to-lime-700 text-white px-6 py-3 rounded-md text-lg w-full sm:w-auto">
               Contact a Specialist
             </Button>
           </Link>
           <Link to="/hire-candidate">
-            <Button variant="outline" className="border-white text-white hover:bg-white hover:text-gray-900 px-6 py-3 rounded-md text-lg w-full sm:w-auto">
+            <Button className="bg-gradient-to-r from-lime-500 to-lime-600 hover:from-lime-600 hover:to-lime-700 text-white px-6 py-3 rounded-md text-lg w-full sm:w-auto">
               Submit Hiring Request
             </Button>
           </Link>

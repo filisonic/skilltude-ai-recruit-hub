@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm run build:*)",
+      "WebFetch(domain:thinkbot.framer.ai)",
+      "WebFetch(domain:onepagelove.com)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

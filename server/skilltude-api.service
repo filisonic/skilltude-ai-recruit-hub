@@ -1,0 +1,58 @@
+# Systemd Service File for SkillTude CV Analysis API
+# 
+# Installation Instructions:
+# 1. Copy this file to /etc/systemd/system/skilltude-api.service
+# 2. Update paths and user/group as needed
+# 3. Reload systemd: sudo systemctl daemon-reload
+# 4. Enable service: sudo systemctl enable skilltude-api
+# 5. Start service: sudo systemctl start skilltude-api
+# 6. Check status: sudo systemctl status skilltude-api
+
+[Unit]
+Description=SkillTude CV Analysis API Server
+Documentation=https://github.com/yourusername/skilltude
+After=network.target mysql.service
+Wants=mysql.service
+
+[Service]
+Type=simple
+User=skilltude
+Group=skilltude
+WorkingDirectory=/var/www/skilltude/server
+
+# Environment
+Environment=NODE_ENV=production
+EnvironmentFile=/var/www/skilltude/server/.env
+
+# Start command
+ExecStart=/usr/bin/node /var/www/skilltude/server/index.js
+
+# Restart policy
+Restart=always
+RestartSec=10
+StartLimitInterval=60
+StartLimitBurst=3
+
+# Resource limits
+LimitNOFILE=65536
+LimitNPROC=4096
+
+# Security settings
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/var/www/skilltude/uploads /var/www/skilltude/logs
+
+# Logging
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=skilltude-api
+
+# Process management
+KillMode=mixed
+KillSignal=SIGTERM
+TimeoutStopSec=30
+
+[Install]
+WantedBy=multi-user.target

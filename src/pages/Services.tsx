@@ -2,6 +2,7 @@
 import React from 'react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import PageLayout from '@/components/PageLayout';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 
@@ -60,7 +61,8 @@ const Services = () => {
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
-      <main className="flex-grow">
+      <PageLayout>
+        <main className="flex-grow">
         <section className="bg-gradient-to-br from-blue-50 to-blue-100 py-16">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center">
@@ -120,13 +122,14 @@ const Services = () => {
               Contact us today to discuss how our services can be tailored to your specific needs.
             </p>
             <Link to="/contact">
-              <Button variant="outline" className="border-white text-white hover:bg-white hover:text-primary px-8 py-3">
+              <Button className="bg-gradient-to-r from-blue-800 via-blue-900 to-orange-600 hover:from-blue-900 hover:via-slate-900 hover:to-orange-700 text-white px-8 py-3">
                 Get in Touch
               </Button>
             </Link>
           </div>
         </section>
-      </main>
+        </main>
+      </PageLayout>
       <Footer />
     </div>
   );

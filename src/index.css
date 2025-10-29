@@ -1,5 +1,8 @@
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap');
+/* Modern Typography - Inspired by One Page Love */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@100;200;300;400;500;600;700;800&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -7,35 +10,59 @@
 
 @layer base {
   :root {
-    --background: 210 40% 98%;
-    --foreground: 222.2 84% 4.9%;
+    --background: 0 0% 100%;
+    --foreground: 210 24% 16%;
 
     --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card-foreground: 210 24% 16%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover-foreground: 210 24% 16%;
 
-    --primary: 199 89% 48%;
-    --primary-foreground: 210 40% 98%;
+    --primary: 210 50% 25%;
+    --primary-foreground: 0 0% 100%;
 
     --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    --secondary-foreground: 210 24% 16%;
 
     --muted: 210 40% 96.1%;
     --muted-foreground: 215.4 16.3% 46.9%;
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    --accent: 32 95% 44%;
+    --accent-foreground: 0 0% 100%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
 
     --border: 214.3 31.8% 91.4%;
     --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    --ring: 210 50% 25%;
 
-    --radius: 0.5rem;
+    --radius: 0.75rem;
+    
+    /* Header height variables for layout spacing */
+    --header-height-default: 5rem;  /* 80px - matches h-20 */
+    --header-height-scrolled: 4rem; /* 64px - matches h-16 */
+    
+    /* New SkillTude Color System */
+    --color-primary-dark: 210 50% 25%;    /* Deep Teal/Navy */
+    --color-primary: 210 45% 35%;         /* Medium Teal */
+    --color-primary-light: 210 40% 45%;   /* Light Teal */
+    
+    --color-accent-dark: 32 95% 35%;      /* Deep Copper */
+    --color-accent: 32 95% 44%;           /* Medium Copper */
+    --color-accent-light: 32 85% 55%;     /* Light Copper */
+    
+    --color-neutral-50: 210 20% 98%;
+    --color-neutral-100: 210 20% 95%;
+    --color-neutral-200: 210 16% 88%;
+    --color-neutral-300: 210 14% 83%;
+    --color-neutral-400: 210 14% 71%;
+    --color-neutral-500: 210 11% 57%;
+    --color-neutral-600: 210 12% 45%;
+    --color-neutral-700: 210 15% 35%;
+    --color-neutral-800: 210 24% 16%;
+    --color-neutral-900: 210 24% 10%;
   }
 
   .dark {
@@ -48,7 +75,7 @@
     --popover: 222.2 84% 4.9%;
     --popover-foreground: 210 40% 98%;
 
-    --primary: 210 40% 98%;
+    --primary: 84 100% 59%;
     --primary-foreground: 222.2 47.4% 11.2%;
 
     --secondary: 217.2 32.6% 17.5%;
@@ -65,7 +92,7 @@
 
     --border: 217.2 32.6% 17.5%;
     --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
+    --ring: 84 100% 59%;
   }
 }
 
@@ -75,36 +102,338 @@
   }
 
   body {
-    @apply bg-background text-foreground font-sans;
+    @apply bg-background text-foreground;
+    font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+    font-feature-settings: "rlig" 1, "calt" 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  html {
+    scroll-behavior: smooth;
   }
 
   h1, h2, h3, h4, h5, h6 {
-    @apply font-heading;
+    @apply font-bold tracking-tight;
   }
 }
 
 @layer components {
   .btn-primary {
-    @apply bg-primary text-primary-foreground hover:bg-primary/90 px-6 py-3 rounded-md font-medium transition-colors;
+    @apply bg-gradient-to-r from-teal-600 via-cyan-600 to-orange-500 hover:from-teal-700 hover:via-cyan-700 hover:to-orange-600 text-white font-semibold transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105;
   }
 
   .btn-secondary {
-    @apply bg-secondary text-secondary-foreground hover:bg-secondary/80 px-6 py-3 rounded-md font-medium transition-colors;
+    @apply bg-white border-2 border-teal-200 hover:border-teal-300 text-teal-700 hover:text-teal-900 font-semibold transition-all duration-300 hover:shadow-lg;
   }
 
   .btn-outline {
-    @apply border border-primary text-primary hover:bg-primary hover:text-primary-foreground px-6 py-3 rounded-md font-medium transition-colors;
+    @apply border-2 border-teal-600 text-teal-600 hover:bg-teal-600 hover:text-white font-semibold transition-all duration-300;
+  }
+
+  .btn-accent {
+    @apply bg-gradient-to-r from-orange-500 via-amber-500 to-orange-600 hover:from-orange-600 hover:via-amber-600 hover:to-orange-700 text-white font-semibold transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105;
   }
   
   .section-container {
-    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-20;
+    @apply max-w-7xl mx-auto px-6 py-24 md:py-32;
   }
   
   .card-hover {
-    @apply transition-all duration-300 hover:shadow-lg hover:-translate-y-1;
+    @apply transition-all duration-500 hover:shadow-xl hover:-translate-y-2;
   }
   
   .gradient-text {
-    @apply bg-gradient-to-r from-primary to-primary-dark bg-clip-text text-transparent;
+    @apply text-transparent bg-clip-text bg-gradient-to-r from-teal-600 via-cyan-600 to-orange-500;
   }
+
+  .gradient-text-accent {
+    @apply text-transparent bg-clip-text bg-gradient-to-r from-orange-500 via-amber-500 to-orange-600;
+  }
+
+  .glass-effect {
+    @apply bg-white/70 backdrop-blur-md border border-white/20 shadow-xl;
+  }
+
+  .hover-lift {
+    @apply transition-all duration-300 hover:-translate-y-2 hover:shadow-xl;
+  }
+
+  .focus-ring {
+    @apply focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2;
+  }
+
+  .animate-fade-in {
+    animation: fadeIn 0.6s ease-out forwards;
+  }
+
+  .animate-slide-up {
+    animation: slideUp 0.8s ease-out forwards;
+  }
+
+  .animate-gradient {
+    animation: gradient 3s ease infinite;
+    background-size: 200%;
+  }
+
+  /* New SkillTude specific classes */
+  .skilltude-primary {
+    @apply bg-gradient-to-br from-teal-600 via-cyan-600 to-orange-500;
+  }
+
+  .skilltude-accent {
+    @apply bg-gradient-to-br from-orange-500 via-amber-500 to-orange-600;
+  }
+
+  .skilltude-text-primary {
+    @apply text-teal-700;
+  }
+
+  .skilltude-text-accent {
+    @apply text-orange-600;
+  }
+
+  .skilltude-border {
+    @apply border-teal-200;
+  }
+
+  .skilltude-hover {
+    @apply hover:bg-teal-50 hover:border-teal-300 transition-all duration-300;
+  }
+
+  /* PageLayout component styles */
+  .page-layout {
+    @apply min-h-screen;
+    padding-top: var(--header-height-default);
+    transition: padding-top 300ms ease;
+  }
+
+  .page-layout--scrolled {
+    padding-top: var(--header-height-scrolled);
+  }
+
+  /* Responsive adjustments for mobile */
+  @media (max-width: 768px) {
+    .page-layout {
+      /* Ensure adequate spacing on mobile devices */
+      padding-top: var(--header-height-default);
+    }
+    
+    .page-layout--scrolled {
+      padding-top: var(--header-height-scrolled);
+    }
+  }
+
+  /* Mobile menu interaction with layout system */
+  .mobile-menu-open .page-layout {
+    /* Ensure content doesn't shift when mobile menu is open */
+    padding-top: var(--header-height-default);
+  }
+
+  /* Smooth transitions for header state changes */
+  .header-scrolled .page-layout {
+    padding-top: var(--header-height-scrolled);
+  }
+
+  /* Ensure mobile menu doesn't interfere with page content */
+  @media (max-width: 1024px) {
+    .mobile-menu-open {
+      /* Prevent background scroll when mobile menu is open */
+      overflow: hidden;
+    }
+  }
+
+  /* Fallback for browsers that don't support CSS custom properties */
+  @supports not (padding-top: var(--header-height-default)) {
+    .page-layout {
+      padding-top: 5rem; /* 80px fallback */
+    }
+    
+    .page-layout--scrolled {
+      padding-top: 4rem; /* 64px fallback */
+    }
+    
+    .mobile-menu-open .page-layout {
+      padding-top: 5rem; /* 80px fallback */
+    }
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+  
+  .bg-size-200 {
+    background-size: 200%;
+  }
+  
+  .bg-pos-0 {
+    background-position: 0%;
+  }
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes gradient {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f8fafc;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #84cc16;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #65a30d;
+}
+
+/* Selection styles */
+::selection {
+  background-color: rgba(132, 204, 22, 0.2);
+  color: #365314;
+}
+
+/* Enhanced focus styles for accessibility */
+.focus\:ring-lime:focus {
+  --tw-ring-color: rgb(132 204 22 / 0.5);
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  
+  .animate-gradient,
+  .animate-fade-in,
+  .animate-slide-up {
+    animation: none !important;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .btn-primary {
+    @apply border-2 border-lime-800;
+  }
+  
+  .gradient-text {
+    @apply text-lime-700;
+    background: none;
+    -webkit-background-clip: unset;
+    background-clip: unset;
+  }
+}
+
+/* Print styles */
+@media print {
+  .no-print {
+    display: none !important;
+  }
+  
+  * {
+    @apply text-black bg-white;
+  }
+  
+  .gradient-text {
+    @apply text-black;
+    background: none;
+    -webkit-background-clip: unset;
+    background-clip: unset;
+  }
+}
+/* Performance optimizations for blog */
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.line-clamp-3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Optimize image loading */
+img {
+  content-visibility: auto;
+  contain-intrinsic-size: 300px 200px;
+}
+
+/* Optimize animations for reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .hover\:scale-105:hover,
+  .hover\:scale-110:hover,
+  .group-hover\:scale-105,
+  .group-hover\:scale-110 {
+    transform: none !important;
+  }
+  
+  .transition-transform,
+  .transition-all {
+    transition: none !important;
+  }
+}
+
+/* Optimize blog card performance */
+.blog-card {
+  contain: layout style paint;
+  will-change: transform;
+}
+
+.blog-card:hover {
+  will-change: auto;
 }

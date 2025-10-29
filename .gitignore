@@ -12,6 +12,26 @@ dist
 dist-ssr
 *.local
 
+# Environment variables - NEVER commit these!
+.env
+.env.local
+.env.production
+.env.*.local
+server/.env
+server/.env.production
+
+# Build outputs
+build/
+server/dist/
+
+# Uploaded files and user data
+uploads/
+uploads/cvs/*
+!uploads/cvs/.gitkeep
+
+# Test coverage
+coverage/
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
@@ -22,3 +42,15 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# OS files
+Thumbs.db
+
+# Temporary files
+*.tmp
+*.temp
+.cache/
+
+# Large archives
+*.zip
+node_modules.zip

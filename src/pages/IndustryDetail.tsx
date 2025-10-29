@@ -3,6 +3,7 @@ import React, { useEffect } from 'react';
 import { useParams, Navigate, useLocation } from 'react-router-dom';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import PageLayout from '@/components/PageLayout';
 import IndustryHero from '@/components/industries/IndustryHero';
 import IndustryOverview from '@/components/industries/IndustryOverview';
 import IndustryRoles from '@/components/industries/IndustryRoles';
@@ -26,12 +27,14 @@ const IndustryDetail = () => {
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
-      <main className="flex-grow">
+      <PageLayout>
+        <main className="flex-grow">
         <IndustryHero industry={industry} />
         <IndustryOverview industry={industry} />
         <IndustryRoles industry={industry} />
         <IndustryCta industry={industry} />
-      </main>
+        </main>
+      </PageLayout>
       <Footer />
     </div>
   );

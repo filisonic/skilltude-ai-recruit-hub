@@ -16,19 +16,7 @@ const Testimonial = () => {
             </p>
           </blockquote>
           
-          <div className="mt-8">
-            <div className="flex items-center justify-center">
-              <img 
-                className="h-12 w-12 rounded-full object-cover"
-                src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-4.0.3"
-                alt="Sarah Chen"
-              />
-              <div className="ml-4 text-left">
-                <p className="font-semibold">Sarah Chen</p>
-                <p className="text-white/70">CTO, TechVision Inc.</p>
-              </div>
-            </div>
-          </div>
+
         </div>
       </div>
     </section>

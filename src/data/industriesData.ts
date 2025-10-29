@@ -1,4 +1,4 @@
-import { Cpu, MicrochipIcon, CircuitBoard, Computer } from 'lucide-react';
+import { Cpu, CircuitBoard, Computer } from 'lucide-react';
 import { IndustriesDataType } from '@/types/industry';
 
 // Industry data with detailed information
@@ -10,7 +10,7 @@ export const industriesData: IndustriesDataType = {
     accentColor: 'bg-purple-600',
     textColor: 'text-purple-700',
     buttonColor: 'bg-purple-600 hover:bg-purple-700',
-    image: 'https://images.unsplash.com/photo-1487058792275-0ad4aaf24ca7',
+    image: '/images/ai.png',
     description: 'Specialized recruitment for artificial intelligence and machine learning roles across research, development, and implementation.',
     longDescription: 'The AI and machine learning sector is experiencing unprecedented growth, with demand for talented professionals far outpacing supply. Our specialized recruiters have deep technical understanding of neural networks, deep learning, computer vision, NLP, and reinforcement learning domains. We connect innovative companies with AI researchers, ML engineers, data scientists, and AI product managers who can turn cutting-edge research into practical applications.',
     keyRoles: [
@@ -33,7 +33,7 @@ export const industriesData: IndustriesDataType = {
       '71% increase in AI job postings over the past 3 years',
       '$15.7 trillion potential contribution to the global economy by 2030'
     ],
-    lucideIcon: MicrochipIcon
+    lucideIcon: Cpu
   },
   'semiconductors': {
     name: 'Semiconductors',
@@ -42,7 +42,7 @@ export const industriesData: IndustriesDataType = {
     accentColor: 'bg-blue-600',
     textColor: 'text-blue-700',
     buttonColor: 'bg-blue-600 hover:bg-blue-700',
-    image: 'https://images.unsplash.com/photo-1518770660439-4636190af475',
+    image: '/images/semi.png',
     description: 'Connecting top talent with semiconductor manufacturers, design houses, and equipment suppliers.',
     longDescription: 'The semiconductor industry forms the backbone of modern technology, powering everything from smartphones to data centers to automotive systems. With the global chip shortage highlighting the strategic importance of this sector, companies are investing heavily in expanding production capacity and innovation. Our specialized recruitment services connect semiconductor manufacturers, design houses, and equipment suppliers with engineers and executives who understand the complexities of chip design, fabrication, packaging, and testing.',
     keyRoles: [
@@ -74,7 +74,7 @@ export const industriesData: IndustriesDataType = {
     accentColor: 'bg-green-600',
     textColor: 'text-green-700',
     buttonColor: 'bg-green-600 hover:bg-green-700',
-    image: 'https://images.unsplash.com/photo-1487058792275-0ad4aaf24ca7',
+    image: '/images/automotive.png',
     description: 'Recruitment solutions for autonomous vehicles, electric cars, and smart mobility technologies.',
     longDescription: 'The automotive industry is undergoing its most significant transformation since the invention of the assembly line. Electrification, autonomous driving, and connected car technologies are creating entirely new categories of jobs and skill requirements. Our automotive recruitment specialists understand both traditional vehicle engineering and the cutting-edge software, sensors, and AI systems that define modern mobility solutions. We help OEMs, tier suppliers, and mobility startups find the talent they need to navigate this revolutionary transition.',
     keyRoles: [
@@ -106,7 +106,7 @@ export const industriesData: IndustriesDataType = {
     accentColor: 'bg-amber-600',
     textColor: 'text-amber-700',
     buttonColor: 'bg-amber-600 hover:bg-amber-700',
-    image: 'https://images.unsplash.com/photo-1487058792275-0ad4aaf24ca7',
+    image: '/images/battery-pack.png',
     description: 'Finding specialized talent for energy storage development, production, and research.',
     longDescription: 'Battery technology represents one of the most critical innovation areas for enabling the green energy transition. From electric vehicles to grid-scale storage to consumer electronics, advanced battery systems are essential for a sustainable future. Our recruitment teams specialize in connecting battery manufacturers, materials companies, and research institutions with electrochemists, materials scientists, manufacturing engineers, and other specialists who can advance the next generation of energy storage solutions.',
     keyRoles: [
@@ -129,7 +129,7 @@ export const industriesData: IndustriesDataType = {
       '$300+ billion committed to battery gigafactory investments worldwide',
       '3.5x increase in battery energy density projected by 2030'
     ],
-    lucideIcon: MicrochipIcon
+    lucideIcon: Cpu
   },
   'web-tech': {
     name: 'Web Tech',
@@ -225,7 +225,7 @@ export const industriesData: IndustriesDataType = {
       '81% of large companies considering or deploying blockchain solutions',
       '67% talent gap in qualified blockchain developers'
     ],
-    lucideIcon: MicrochipIcon
+    lucideIcon: Cpu
   },
   'wireless-iot': {
     name: 'Wireless & IoT',
@@ -234,7 +234,7 @@ export const industriesData: IndustriesDataType = {
     accentColor: 'bg-teal-600',
     textColor: 'text-teal-700',
     buttonColor: 'bg-teal-600 hover:bg-teal-700',
-    image: 'https://images.unsplash.com/photo-1531297484001-80022131f5a1',
+    image: '/images/wireless-charging.png',
     description: 'Recruiting for roles in wireless communication, IoT infrastructure, and connected devices.',
     longDescription: 'Wireless technologies and the Internet of Things (IoT) are transforming how we interact with the physical world, creating networks of billions of connected devices that generate and process vast amounts of data. From 5G networks to low-power wide-area networks to mesh protocols, the wireless landscape continues to evolve. Our recruiters specialize in finding RF engineers, embedded systems developers, and IoT solutions architects who can design and deploy reliable connected systems across consumer, industrial, agricultural, and smart city applications.',
     keyRoles: [
@@ -266,7 +266,7 @@ export const industriesData: IndustriesDataType = {
     accentColor: 'bg-indigo-600',
     textColor: 'text-indigo-700',
     buttonColor: 'bg-indigo-600 hover:bg-indigo-700',
-    image: 'https://images.unsplash.com/photo-1531297484001-80022131f5a1',
+    image: '/images/cloud-computing.png',
     description: 'Finding skilled professionals in cloud architecture, DevOps, and platform engineering.',
     longDescription: 'Cloud computing has fundamentally transformed how organizations build, deploy, and scale applications and services. From infrastructure-as-a-service to serverless architectures, the cloud enables unprecedented flexibility and efficiency. Our cloud recruitment specialists understand the unique requirements of major platforms like AWS, Azure, and Google Cloud, as well as multi-cloud strategies, helping companies find architects, engineers, and specialists who can design resilient, cost-effective, and secure cloud environments.',
     keyRoles: [
@@ -385,7 +385,7 @@ export const industriesData: IndustriesDataType = {
       '38% increase in computational biology roles in 5 years',
       '74% of biotech companies reporting talent shortages'
     ],
-    lucideIcon: MicrochipIcon
+    lucideIcon: Cpu
   },
   'cyber-security': {
     name: 'Cyber Security',
@@ -394,7 +394,7 @@ export const industriesData: IndustriesDataType = {
     accentColor: 'bg-red-600',
     textColor: 'text-red-700',
     buttonColor: 'bg-red-600 hover:bg-red-700',
-    image: 'https://images.unsplash.com/photo-1531297484001-80022131f5a1',
+    image: '/images/cyber-security.png',
     description: 'Recruiting information security specialists, ethical hackers, and security architects.',
     longDescription: 'Cybersecurity has become a critical priority for organizations of all sizes as digital transformation increases attack surfaces and sophisticated threats continue to evolve. From protecting critical infrastructure to securing cloud environments to ensuring data privacy, the demand for security expertise far outpaces supply. Our cybersecurity recruitment specialists help companies build robust security teams with the technical skills, threat intelligence, and risk management expertise needed to protect systems, data, and operations from increasingly complex cyber threats.',
     keyRoles: [
@@ -426,7 +426,7 @@ export const industriesData: IndustriesDataType = {
     accentColor: 'bg-cyan-600',
     textColor: 'text-cyan-700',
     buttonColor: 'bg-cyan-600 hover:bg-cyan-700',
-    image: 'https://images.unsplash.com/photo-1487058792275-0ad4aaf24ca7',
+    image: '/images/data-science.png',
     description: 'Finding data scientists, analysts, and engineers to help companies leverage their data assets.',
     longDescription: 'Data science and analytics have become essential capabilities for organizations seeking to derive actionable insights from the vast amounts of data they generate and collect. From predictive models to data visualization to large-scale data engineering, companies across industries need specialists who can transform raw data into business value. Our data science recruitment team specializes in connecting organizations with professionals who combine statistical knowledge, programming skills, and business acumen to build data products and solutions that drive strategic decision-making and operational excellence.',
     keyRoles: [
@@ -458,7 +458,7 @@ export const industriesData: IndustriesDataType = {
     accentColor: 'bg-lime-600',
     textColor: 'text-lime-700',
     buttonColor: 'bg-lime-600 hover:bg-lime-700',
-    image: 'https://images.unsplash.com/photo-1531297484001-80022131f5a1',
+    image: '/images/fintech.png',
     description: 'Specialized recruitment for financial technology roles in banking, payments, and insurance tech.',
     longDescription: 'Financial technology is transforming banking, payments, lending, insurance, and wealth management, creating more accessible, efficient, and personalized financial services. Fintech companies and traditional financial institutions are competing for specialized talent who understand both financial services and modern technology stacks. Our fintech recruiters have deep domain knowledge in areas like payment systems, regulatory requirements, blockchain, and AI-driven risk management to help companies build teams that can develop innovative, compliant, and secure financial solutions.',
     keyRoles: [
@@ -481,7 +481,7 @@ export const industriesData: IndustriesDataType = {
       '96% of global consumers aware of at least one fintech service',
       '70% of financial services companies now partnering with fintech firms'
     ],
-    lucideIcon: MicrochipIcon
+    lucideIcon: Cpu
   },
   'industry-research': {
     name: 'Industry Research',

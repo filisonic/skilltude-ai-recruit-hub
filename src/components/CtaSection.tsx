@@ -15,13 +15,13 @@ const CtaSection = () => {
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Link to="/contact">
-            <Button className="bg-primary hover:bg-primary/90 text-white px-8 py-3 rounded-md text-lg w-full sm:w-auto">
+            <Button className="bg-gradient-to-r from-teal-600 via-cyan-600 to-orange-500 hover:from-teal-700 hover:via-cyan-700 hover:to-orange-600 text-white px-8 py-3 rounded-md text-lg w-full sm:w-auto">
               Contact Us Today
             </Button>
           </Link>
-          <Link to="/demo">
-            <Button variant="outline" className="border-white text-white hover:bg-white hover:text-gray-900 px-8 py-3 rounded-md text-lg w-full sm:w-auto">
-              Request a Demo
+          <Link to="/careers">
+            <Button className="bg-gradient-to-r from-teal-600 via-cyan-600 to-orange-500 hover:from-teal-700 hover:via-cyan-700 hover:to-orange-600 text-white px-8 py-3 rounded-md text-lg w-full sm:w-auto">
+              View Open Positions
             </Button>
           </Link>
         </div>
