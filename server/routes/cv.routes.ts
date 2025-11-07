@@ -256,7 +256,9 @@ router.post(
       
       let extractedText: string;
       try {
-        extractedText = await textExtraction.extractText(storedFilePath, req.file.mimetype);
+        // Convert relative path to absolute path for text extraction
+        const absoluteFilePath = path.join(config.storage.uploadDir, storedFilePath);
+        extractedText = await textExtraction.extractText(absoluteFilePath, req.file.mimetype);
       } catch (extractionError) {
         console.error('Text extraction failed:', extractionError);
         // Continue with empty text - analysis will handle this
