@@ -17,3 +17,7 @@ CREATE INDEX idx_email_scheduled_at ON cv_submissions(email_scheduled_at);
 
 -- Add comment to table
 ALTER TABLE cv_submissions COMMENT = 'CV submissions with email queue and conversion tracking';
+CREATE INDEX idx_converted_to_premium ON cv_submissions(converted_to_premium);
+
+-- Add comment to table
+ALTER TABLE cv_submissions COMMENT = 'CV submissions with email queue and conversion tracking';

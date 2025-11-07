@@ -1,5 +1,5 @@
 
-import React, { useState, useMemo, lazy, Suspense } from 'react';
+import React, { useState, useMemo, lazy, Suspense, useEffect } from 'react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import PageLayout from '@/components/PageLayout';
@@ -7,92 +7,63 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Link } from 'react-router-dom';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
+import { blogApi } from '@/lib/api';
+import { BlogPost } from '@/types/blog.types';
 
 // Lazy load components that aren't immediately visible
 const LazyImage = lazy(() => import('@/components/LazyImage'));
 
-const categories = [
-  'All', 'AI Trends', 'Career Advice', 'Industry Insights', 
-  'Tech Hiring', 'Workplace Culture', 'Future of Work'
-];
-
-const blogPosts = [
-  {
-    id: 'future-of-ai-recruiting-2024',
-    title: 'The Future of AI in Recruiting: What 2024 Holds',
-    excerpt: 'Explore the latest AI innovations transforming talent acquisition, from predictive analytics to automated screening processes.',
-    author: 'Dr. Sarah Mitchell',
-    date: 'December 15, 2024',
-    category: 'AI Trends',
-    image: 'https://images.unsplash.com/photo-1677442136019-21780ecad995?ixlib=rb-4.0.3'
-  },
-  {
-    id: 'tech-salary-trends-2024',
-    title: 'Tech Salary Trends: What Developers Can Expect in 2024',
-    excerpt: 'Comprehensive analysis of compensation trends across different tech roles, experience levels, and geographic markets.',
-    author: 'Alex Chen',
-    date: 'December 10, 2024',
-    category: 'Career Advice',
-    image: 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?ixlib=rb-4.0.3'
-  },
-  {
-    id: 'remote-first-hiring-strategies',
-    title: 'Remote-First Hiring: Building Global Tech Teams',
-    excerpt: 'How companies are adapting their recruitment strategies to build successful distributed teams across time zones.',
-    author: 'Maria Rodriguez',
-    date: 'December 5, 2024',
-    category: 'Industry Insights',
-    image: 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-4.0.3'
-  },
-  {
-    id: 'cybersecurity-talent-gap',
-    title: 'Bridging the Cybersecurity Talent Gap: Innovative Solutions',
-    excerpt: 'Addressing the critical shortage of cybersecurity professionals through creative recruitment and training approaches.',
-    author: 'David Park',
-    date: 'November 28, 2024',
-    category: 'Tech Hiring',
-    image: 'https://images.unsplash.com/photo-1550751827-4bd374c3f58b?ixlib=rb-4.0.3'
-  },
-  {
-    id: 'startup-vs-enterprise-recruiting',
-    title: 'Startup vs Enterprise: Different Approaches to Tech Recruiting',
-    excerpt: 'Understanding how recruitment strategies differ between startups and large enterprises, and what works best for each.',
-    author: 'Jennifer Kim',
-    date: 'November 20, 2024',
-    category: 'Industry Insights',
-    image: 'https://images.unsplash.com/photo-1559136555-9303baea8ebd?ixlib=rb-4.0.3'
-  },
-  {
-    id: 'developer-experience-retention',
-    title: 'Developer Experience: The Key to Tech Talent Retention',
-    excerpt: 'How creating exceptional developer experiences can significantly improve retention rates and attract top talent.',
-    author: 'Ryan Thompson',
-    date: 'November 15, 2024',
-    category: 'Workplace Culture',
-    image: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?ixlib=rb-4.0.3'
-  }
-];
-
 const Blog = () => {
+  const [posts, setPosts] = useState<BlogPost[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [currentPage, setCurrentPage] = useState(1);
   const postsPerPage = 6;
 
-  // Scroll to top when component mounts
-  React.useEffect(() => {
+  // Fetch blog posts from API
+  const fetchBlogPosts = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      const response = await fetch(blogApi.getArticles());
+      
+      if (!response.ok) {
+        throw new Error(`Failed to fetch articles: ${response.statusText}`);
+      }
+      
+      const data = await response.json();
+      setPosts(data.articles || []);
+    } catch (err) {
+      console.error('Error fetching blog posts:', err);
+      setError(err instanceof Error ? err.message : 'Failed to load articles. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Fetch posts and scroll to top when component mounts
+  useEffect(() => {
     window.scrollTo(0, 0);
+    fetchBlogPosts();
   }, []);
+
+  // Extract unique categories from posts
+  const categories = useMemo(() => {
+    const uniqueCategories = new Set(posts.map(post => post.category));
+    return ['All', ...Array.from(uniqueCategories).sort()];
+  }, [posts]);
 
   // Memoized filtered posts for better performance
   const filteredPosts = useMemo(() => {
-    return blogPosts.filter(post => {
+    return posts.filter(post => {
       const matchesSearch = post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
                            post.excerpt.toLowerCase().includes(searchTerm.toLowerCase());
       const matchesCategory = selectedCategory === 'All' || post.category === selectedCategory;
       return matchesSearch && matchesCategory;
     });
-  }, [searchTerm, selectedCategory]);
+  }, [posts, searchTerm, selectedCategory]);
 
   // Memoized paginated posts
   const paginatedPosts = useMemo(() => {
@@ -103,7 +74,7 @@ const Blog = () => {
   const totalPages = Math.ceil(filteredPosts.length / postsPerPage);
 
   // Memoized recent posts for sidebar
-  const recentPosts = useMemo(() => blogPosts.slice(0, 3), []);
+  const recentPosts = useMemo(() => posts.slice(0, 3), [posts]);
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
@@ -160,9 +131,37 @@ const Blog = () => {
                     </select>
                   </div>
 
+                  {/* Loading State */}
+                  {loading && (
+                    <div className="flex flex-col items-center justify-center py-16">
+                      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-teal-600 mb-4"></div>
+                      <p className="text-gray-600">Loading articles...</p>
+                    </div>
+                  )}
+
+                  {/* Error State */}
+                  {error && !loading && (
+                    <div className="bg-red-50 border border-red-200 rounded-lg p-6 text-center">
+                      <div className="text-red-600 mb-4">
+                        <svg className="w-12 h-12 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        <p className="text-lg font-semibold">Unable to load articles</p>
+                      </div>
+                      <p className="text-gray-700 mb-4">{error}</p>
+                      <Button 
+                        onClick={fetchBlogPosts}
+                        className="bg-gradient-to-r from-teal-600 via-cyan-600 to-orange-500 hover:from-teal-700 hover:via-cyan-700 hover:to-orange-600"
+                      >
+                        Try Again
+                      </Button>
+                    </div>
+                  )}
+
                   {/* Posts Grid - Only render visible posts */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    {paginatedPosts.map((post) => (
+                  {!loading && !error && (
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                      {paginatedPosts.map((post) => (
                       <Card key={post.id} className="overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
                         <Link to={`/blog/${post.id}`} className="block h-48 overflow-hidden">
                           <Suspense fallback={
@@ -204,8 +203,9 @@ const Blog = () => {
                           </div>
                         </CardContent>
                       </Card>
-                    ))}
-                  </div>
+                      ))}
+                    </div>
+                  )}
                   
                   {/* Pagination - Only show if there are multiple pages */}
                   {totalPages > 1 && (
@@ -227,7 +227,7 @@ const Blog = () => {
                   )}
 
                   {/* No results message */}
-                  {filteredPosts.length === 0 && (
+                  {!loading && !error && filteredPosts.length === 0 && (
                     <div className="text-center py-12">
                       <p className="text-gray-500 text-lg">No articles found matching your criteria.</p>
                       <Button 

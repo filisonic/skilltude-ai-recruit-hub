@@ -41,20 +41,26 @@ cd "D:\client websites\skilltude\skilltude-ai-recruit-hub"
 # 2. Install dependencies (if needed)
 npm install
 
-# 3. Build frontend
+# 3. Configure frontend environment for production
+# Create .env.production with your backend API URL
+echo VITE_API_URL=https://yourdomain.com > .env.production
+# Or manually edit .env.production and set:
+# VITE_API_URL=https://yourdomain.com
+
+# 4. Build frontend (uses .env.production)
 npm run build
 # ✅ Creates: dist/
 
-# 4. Build backend
+# 5. Build backend
 npm run server:build
 # ✅ Creates: server/dist/
 
-# 5. Prepare backend environment
+# 6. Prepare backend environment
 cd server
 cp .env.production .env
 # Edit .env with production values
 
-# 6. Install production dependencies for backend
+# 7. Install production dependencies for backend
 npm ci --production
 # ✅ Creates: server/node_modules/ (production only)
 ```
@@ -152,6 +158,26 @@ Settings:
 
 ## Environment Variables
 
+### Frontend Environment Variables
+
+**File:** `.env.production` (in project root)
+
+```env
+# Backend API URL - REQUIRED for frontend to connect to backend
+VITE_API_URL=https://yourdomain.com
+```
+
+**Important Notes:**
+- This variable is read at **build time** by Vite
+- You must set it **before** running `npm run build`
+- If you change it, you must rebuild the frontend
+- The URL should point to your backend API (same domain or API subdomain)
+- Do not include trailing slash
+
+### Backend Environment Variables
+
+**File:** `server/.env`
+
 Add these in Node.js application settings (or in `server/.env`):
 
 ```env
@@ -168,6 +194,7 @@ EMAIL_FROM_ADDRESS=noreply@yourdomain.com
 JWT_SECRET=generate_64_char_random
 SESSION_SECRET=generate_64_char_random
 FRONTEND_URL=https://yourdomain.com
+VITE_API_URL=https://yourdomain.com
 ```
 
 ## Testing

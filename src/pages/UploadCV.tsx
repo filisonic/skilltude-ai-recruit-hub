@@ -1,9 +1,15 @@
+import React from 'react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import PageLayout from '@/components/PageLayout';
-import CVUploadForm from '@/components/CVUploadForm';
+import CVUploadHero from '@/components/CVUploadHero';
 
 const UploadCV = () => {
+  // Scroll to top when component mounts
+  React.useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   const handleSuccess = (submissionId: string) => {
     console.log('CV uploaded successfully:', submissionId);
   };
@@ -16,15 +22,11 @@ const UploadCV = () => {
     <div className="min-h-screen flex flex-col">
       <Header />
       <PageLayout>
-        <main className="flex-grow bg-gray-50 py-16">
-          <div className="max-w-4xl mx-auto px-4 sm:px-6">
-            <CVUploadForm
-              variant="hero"
-              showBenefits={true}
-              onSuccess={handleSuccess}
-              onError={handleError}
-            />
-          </div>
+        <main className="flex-grow">
+          <CVUploadHero 
+            onSuccess={handleSuccess}
+            onError={handleError}
+          />
         </main>
       </PageLayout>
       <Footer />

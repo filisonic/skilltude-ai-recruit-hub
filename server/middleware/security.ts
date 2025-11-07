@@ -22,11 +22,14 @@ export function csrfProtection(req: Request, res: Response, next: NextFunction):
   const referer = req.headers.referer;
   
   // Verify the request is from our frontend
+  const frontendUrl = (process.env.FRONTEND_URL || 'http://localhost:5173').trim();
   const allowedOrigins = [
-    process.env.FRONTEND_URL || 'http://localhost:5173',
+    frontendUrl,
+    frontendUrl.replace('://www.', '://'), // Support non-www version
+    frontendUrl.replace('://', '://www.'), // Support www version
     'http://localhost:5173',
     'http://localhost:3000',
-  ];
+  ].filter((v, i, a) => a.indexOf(v) === i); // Remove duplicates
   
   // Check if origin or referer matches allowed origins
   const isValidOrigin = origin && allowedOrigins.some(allowed => origin.startsWith(allowed));

@@ -100,6 +100,10 @@ app.use('/api/admin', adminCvRoutes);
 import monitoringRoutes from './routes/monitoring.routes.js';
 app.use('/api/monitoring', monitoringRoutes);
 
+// Blog routes
+import blogRoutes from './routes/blog.routes.js';
+app.use('/api/blog', blogRoutes);
+
 // ============================================================================
 // Error Handling
 // ============================================================================

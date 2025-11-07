@@ -59,7 +59,8 @@ npm install
 
 **Frontend (.env):**
 ```env
-VITE_API_URL=http://localhost:3000
+# API URL for backend connection
+VITE_API_URL=http://localhost:3001
 ```
 
 **Backend (server/.env):**
@@ -159,6 +160,33 @@ npm start
 └── public/                # Static assets
 ```
 
+## ⚙️ Environment Configuration
+
+### Frontend Environment Variables
+
+The frontend uses Vite's environment variable system. Variables must be prefixed with `VITE_` to be exposed to the client.
+
+**Development (.env):**
+```env
+VITE_API_URL=http://localhost:3001
+```
+
+**Production (.env.production):**
+```env
+VITE_API_URL=https://api.yourdomain.com
+```
+
+The `VITE_API_URL` variable is used by the frontend to connect to the backend API. It's configured in `src/lib/api.ts` and used throughout the application for:
+- Blog article fetching
+- CV upload and status checking
+- Admin dashboard operations
+
+**Important Notes:**
+- The API URL should point to your backend server
+- In development, it typically points to `http://localhost:3001`
+- In production, it should point to your deployed backend URL
+- The variable is read at build time, so you need to rebuild the frontend if you change it
+
 ## 🔐 Security Features
 
 - Rate limiting on API endpoints
@@ -174,6 +202,9 @@ npm start
 ### Public Endpoints
 - `POST /api/cv/upload` - Upload CV for analysis
 - `GET /api/cv/status/:id` - Check CV processing status
+- `GET /api/blog/articles` - Get all published blog articles
+- `GET /api/blog/articles/:slug` - Get single blog article by slug
+- `GET /api/blog/categories` - Get all blog categories
 
 ### Admin Endpoints (Protected)
 - `POST /api/admin/login` - Admin authentication

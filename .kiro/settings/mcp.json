@@ -1,0 +1,16 @@
+{
+  "mcpServers": {
+    "render": {
+      "command": "uvx",
+      "args": [
+        "mcp-server-render"
+      ],
+      "env": {
+        "RENDER_API_KEY": "rnd_TRlh5kb3Z8mFbuQ9HQ29jAA1jEp4"
+      },
+      "disabled": true,
+      "autoApprove": [],
+      "note": "Render MCP server not yet available in package registry"
+    }
+  }
+}

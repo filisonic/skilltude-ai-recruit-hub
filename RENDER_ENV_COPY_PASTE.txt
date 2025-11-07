@@ -1,0 +1,64 @@
+# ========================================
+# COPY THESE TO RENDER - ONE BY ONE
+# ========================================
+
+# 1. NODE_ENV
+NODE_ENV=production
+
+# 2. PORT (Render uses 10000)
+PORT=10000
+
+# 3. Database - Hostinger MySQL Remote Host
+DB_HOST=srv878.hstgr.io
+DB_PORT=3306
+DB_NAME=u931066387_skilltude
+DB_USER=u931066387_management
+DB_PASSWORD=Skilly@skilltude1
+
+# 4. Email Configuration (Already set up!)
+EMAIL_PROVIDER=smtp
+SMTP_HOST=smtp.gmail.com
+SMTP_PORT=587
+SMTP_SECURE=false
+SMTP_USER=careers@skilltude.com
+SMTP_PASS=gsqu obzl levs mhbj
+EMAIL_FROM_ADDRESS=careers@skilltude.com
+EMAIL_FROM_NAME=SkillTude Careers Team
+
+# 5. File Upload
+UPLOAD_DIR=./uploads
+MAX_FILE_SIZE=10485760
+ALLOWED_FILE_TYPES=application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document
+
+# 6. Security (Your existing secrets - KEEP THESE!)
+JWT_SECRET=f1852fe899833aba9afb0f90bbc1051ea8ce47a62fce0177b8c66249961d6112eb12d1c1c6f61ce4d7698280701dc3c7001d4ed46cd2d1cf6223c742bc286dbf
+SESSION_SECRET=d5b622ab3e0b4742161a4aafe41677f0740956189286edb20a132085b2ecff896779d5f5d9a4f880d26173c0b5ec6538a5f80449ca78437ace7274763f24fb9d
+
+# 7. Rate Limiting
+RATE_LIMIT_WINDOW_MS=3600000
+RATE_LIMIT_MAX_REQUESTS=5
+
+# 8. Frontend URL
+FRONTEND_URL=https://skilltude.com
+
+# 9. CORS Origin (ADD THIS - same as frontend URL)
+CORS_ORIGIN=https://skilltude.com
+
+# 10. Analysis Configuration
+EMAIL_DELAY_HOURS=24
+MIN_CV_SCORE=0
+MAX_CV_SCORE=100
+
+# 11. Admin
+ADMIN_EMAIL=careers@skilltude.com
+
+# 12. Monitoring
+ENABLE_MONITORING=true
+
+# ========================================
+# IMPORTANT: CHANGE DB_HOST!
+# ========================================
+# You need to find your Hostinger MySQL remote host.
+# Go to: Hostinger hPanel → Databases → Remote MySQL
+# Look for the hostname (e.g., mysql123.hostinger.com)
+# Replace "localhost" with that hostname above!

@@ -3,6 +3,8 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import RichTextEditor from '@/components/admin/RichTextEditor';
+import MarkdownEditor from '@/components/admin/MarkdownEditor';
 import { 
   Save, 
   Eye, 
@@ -14,7 +16,9 @@ import {
   FileText,
   Globe,
   AlertCircle,
-  CheckCircle
+  CheckCircle,
+  Type,
+  Code
 } from 'lucide-react';
 
 interface ArticleData {
@@ -47,6 +51,7 @@ const AdminArticleEditor = () => {
   const [isSaving, setIsSaving] = useState(false);
   const [message, setMessage] = useState('');
   const [newTag, setNewTag] = useState('');
+  const [editorMode, setEditorMode] = useState<'rich' | 'markdown'>('rich');
 
   const categories = [
     'AI Trends',
@@ -65,51 +70,35 @@ const AdminArticleEditor = () => {
       return;
     }
 
-    // If editing, load article data (in production, fetch from database)
+    // If editing, load article data from API
     if (isEditing && id) {
-      // Sample data for editing - you can modify this to load actual article data
-      setFormData({
-        title: 'The Future of AI in Recruiting: What 2024 Holds',
-        slug: 'future-of-ai-recruiting-2024',
-        excerpt: 'Explore the latest AI innovations transforming talent acquisition, from predictive analytics to automated screening processes.',
-        content: `# The Future of AI in Recruiting: What 2024 Holds
-
-Artificial Intelligence is revolutionizing the recruitment industry at an unprecedented pace. As we navigate through 2024, AI technologies are becoming more sophisticated, accessible, and integral to successful talent acquisition strategies.
-
-## The Current State of AI in Recruiting
-
-### Market Adoption
-- **78% of companies** are now using some form of AI in their recruitment process
-- **$3.2 billion** invested in HR tech AI solutions in 2024
-- **45% reduction** in average time-to-hire across industries
-- **60% improvement** in candidate quality scores
-
-## Breakthrough Innovations in 2024
-
-### 1. Conversational AI Recruiters
-Advanced chatbots are now conducting initial candidate screenings with human-like conversations:
-- **24/7 availability** for candidate interactions
-- **Multi-language support** for global recruitment
-- **Emotional intelligence** to assess soft skills
-- **Real-time feedback** to candidates
-
-### 2. Predictive Performance Analytics
-AI models can now predict candidate success with remarkable accuracy:
-- **85% accuracy** in predicting 12-month retention
-- **Career trajectory mapping** for long-term planning
-- **Team compatibility analysis** for cultural fit
-- **Performance potential scoring** based on historical data
-
-## The Human-AI Collaboration Model
-
-The future of AI in recruiting is not about replacing human recruiters—it's about augmenting their capabilities and enabling them to focus on what they do best: building relationships, making strategic decisions, and creating exceptional candidate experiences.
-
-Organizations that embrace AI thoughtfully and strategically will gain significant competitive advantages in the war for talent.`,
-        category: 'AI Trends',
-        tags: ['AI', 'Recruitment', 'Technology', 'Future of Work', 'HR Tech', 'Innovation'],
-        featured_image_url: 'https://images.unsplash.com/photo-1677442136019-21780ecad995?ixlib=rb-4.0.3',
-        status: 'published'
-      });
+      const loadArticle = async () => {
+        try {
+          const response = await fetch(`https://skilltude.com/api/blog/article.php?slug=${id}`);
+          const data = await response.json();
+          
+          if (data.success && data.article) {
+            const article = data.article;
+            setFormData({
+              title: article.title,
+              slug: article.slug,
+              excerpt: article.excerpt,
+              content: article.content,
+              category: article.category,
+              tags: article.tags || [],
+              featured_image_url: article.image || '',
+              status: article.published_at ? 'published' : 'draft'
+            });
+          } else {
+            setMessage('Error: Article not found');
+          }
+        } catch (error) {
+          console.error('Error loading article:', error);
+          setMessage('Error loading article');
+        }
+      };
+      
+      loadArticle();
     }
   }, [navigate, isEditing, id]);
 
@@ -161,24 +150,50 @@ Organizations that embrace AI thoughtfully and strategically will gain significa
         return;
       }
 
-      // In production, this would send to your database API
       const articleData = {
-        ...formData,
-        status,
-        updated_at: new Date().toISOString()
+        title: formData.title,
+        slug: formData.slug,
+        excerpt: formData.excerpt,
+        content: formData.content,
+        category: formData.category,
+        tags: formData.tags,
+        featured_image_url: formData.featured_image_url || null,
+        published_at: status === 'published' 
+          ? (formData.status === 'published' && isEditing 
+              ? undefined  // Keep existing published_at when updating published article
+              : new Date().toISOString().slice(0, 19).replace('T', ' '))
+          : null
       };
 
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
-
-      setMessage(`Article ${status === 'published' ? 'published' : 'saved as draft'} successfully!`);
+      const apiUrl = isEditing 
+        ? 'https://skilltude.com/api/blog/admin/update.php'
+        : 'https://skilltude.com/api/blog/admin/create.php';
       
-      // Redirect to dashboard after a delay
-      setTimeout(() => {
-        navigate('/admin/dashboard');
-      }, 2000);
+      const method = isEditing ? 'PUT' : 'POST';
+
+      const response = await fetch(apiUrl, {
+        method,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(articleData)
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        setMessage(`Article ${status === 'published' ? 'published' : 'saved as draft'} successfully!`);
+        
+        // Redirect to dashboard after a delay
+        setTimeout(() => {
+          navigate('/admin/dashboard');
+        }, 2000);
+      } else {
+        setMessage(`Error: ${result.error || 'Failed to save article'}`);
+      }
 
     } catch (error) {
+      console.error('Save error:', error);
       setMessage('Error saving article. Please try again.');
     } finally {
       setIsSaving(false);
@@ -313,21 +328,42 @@ Organizations that embrace AI thoughtfully and strategically will gain significa
             {/* Content */}
             <Card>
               <CardHeader>
-                <CardTitle>Content *</CardTitle>
+                <div className="flex justify-between items-center">
+                  <CardTitle>Content *</CardTitle>
+                  <div className="flex gap-2">
+                    <Button
+                      type="button"
+                      size="sm"
+                      variant={editorMode === 'rich' ? 'default' : 'outline'}
+                      onClick={() => setEditorMode('rich')}
+                    >
+                      <Type className="w-4 h-4 mr-2" />
+                      Rich Text
+                    </Button>
+                    <Button
+                      type="button"
+                      size="sm"
+                      variant={editorMode === 'markdown' ? 'default' : 'outline'}
+                      onClick={() => setEditorMode('markdown')}
+                    >
+                      <Code className="w-4 h-4 mr-2" />
+                      Markdown
+                    </Button>
+                  </div>
+                </div>
               </CardHeader>
               <CardContent>
-                <textarea
-                  name="content"
-                  required
-                  rows={20}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent font-mono text-sm"
-                  placeholder="Write your article content here... (Markdown supported)"
-                  value={formData.content}
-                  onChange={handleInputChange}
-                />
-                <p className="text-sm text-gray-500 mt-2">
-                  You can use Markdown formatting for headers, links, lists, etc.
-                </p>
+                {editorMode === 'rich' ? (
+                  <RichTextEditor
+                    content={formData.content}
+                    onChange={(html) => setFormData(prev => ({ ...prev, content: html }))}
+                  />
+                ) : (
+                  <MarkdownEditor
+                    content={formData.content}
+                    onChange={(markdown) => setFormData(prev => ({ ...prev, content: markdown }))}
+                  />
+                )}
               </CardContent>
             </Card>
           </div>

@@ -251,84 +251,19 @@ router.post(
       const uniqueFilename = path.basename(storedFilePath);
       
       // ========================================================================
-      // 5. Extract Text from CV
-      // ========================================================================
-      
-      let extractedText: string;
-      try {
-        // Convert relative path to absolute path for text extraction
-        const absoluteFilePath = path.join(config.storage.uploadDir, storedFilePath);
-        extractedText = await textExtraction.extractText(absoluteFilePath, req.file.mimetype);
-      } catch (extractionError) {
-        console.error('Text extraction failed:', extractionError);
-        // Continue with empty text - analysis will handle this
-        extractedText = '';
-      }
-      
-      // ========================================================================
-      // 6. Generate Submission UUID (needed for logging)
+      // 5. Generate Submission UUID
       // ========================================================================
       
       const submissionUuid = uuidv4();
       
       // ========================================================================
-      // 7. Run CV Analysis
+      // NOTE: CV Analysis is now ASYNC!
+      // Analysis happens in background via processCVAnalysis cron job
+      // User gets instant response, results sent via email
       // ========================================================================
       
-      let analysisResult;
-      const analysisStartTime = Date.now();
-      try {
-        analysisResult = await analysisEngine.analyzeCV(extractedText);
-        
-        // Log successful analysis
-        logCVAnalysis({
-          submissionId: submissionUuid,
-          score: analysisResult.overallScore,
-          processingTime: Date.now() - analysisStartTime,
-          success: true,
-        });
-      } catch (analysisError) {
-        logger.error('CV analysis failed', {
-          error: analysisError,
-          submissionId: submissionUuid,
-          category: 'cv_analysis',
-        });
-        
-        // Log failed analysis
-        logCVAnalysis({
-          submissionId: submissionUuid,
-          score: 0,
-          processingTime: Date.now() - analysisStartTime,
-          success: false,
-          error: analysisError instanceof Error ? analysisError.message : 'Unknown error',
-        });
-        // Use fallback basic analysis
-        analysisResult = {
-          overallScore: 50,
-          strengths: ['CV received successfully'],
-          improvements: [
-            {
-              category: 'General',
-              priority: 'medium' as const,
-              issue: 'Unable to perform detailed analysis',
-              suggestion: 'Please ensure your CV is properly formatted and readable',
-            },
-          ],
-          atsCompatibility: 50,
-          sectionCompleteness: {
-            contactInfo: false,
-            summary: false,
-            experience: false,
-            education: false,
-            skills: false,
-          },
-          detailedFeedback: 'We received your CV but encountered issues during analysis. Our team will review it manually.',
-          analyzedAt: new Date(),
-        };
-      }
-      
       // ========================================================================
-      // 8. Create Database Record (with Transaction)
+      // 6. Create Database Record (with Transaction)
       // ========================================================================
       
       let submissionId: number = 0;
@@ -347,13 +282,12 @@ router.post(
               cv_file_size,
               cv_mime_type,
               status,
-              analysis_score,
-              analysis_results,
+              analysis_status,
               ip_address,
               user_agent,
               consent_given,
               submitted_at
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())`,
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())`,
             [
               submissionUuid,
               firstName,
@@ -365,8 +299,7 @@ router.post(
               req.file!.size,
               req.file!.mimetype,
               'new',
-              analysisResult.overallScore,
-              JSON.stringify(analysisResult),
+              'pending', // Analysis will happen asynchronously
               ipAddress,
               userAgent,
               consentGiven,

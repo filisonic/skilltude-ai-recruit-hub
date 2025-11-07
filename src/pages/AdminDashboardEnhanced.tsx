@@ -91,31 +91,35 @@ const AdminDashboardEnhanced = () => {
 
     setUser(JSON.parse(adminUser));
 
-    // Load sample data (in production, fetch from database)
-    setArticles([
-      {
-        id: 1,
-        title: 'Top AI Recruitment Trends for 2024',
-        slug: 'ai-recruitment-trends-2024',
-        excerpt: 'Discover how artificial intelligence is transforming the recruitment landscape...',
-        category: 'AI Trends',
-        status: 'published',
-        author: 'Admin User',
-        created_at: '2024-01-15',
-        views: 1250
-      },
-      {
-        id: 2,
-        title: 'Building Effective Remote Teams',
-        slug: 'building-effective-remote-teams',
-        excerpt: 'Best practices for managing and building successful remote development teams...',
-        category: 'Future of Work',
-        status: 'published',
-        author: 'Admin User',
-        created_at: '2024-01-10',
-        views: 890
+    // Load real articles from admin API (includes drafts)
+    const loadArticles = async () => {
+      try {
+        const response = await fetch('https://skilltude.com/api/blog/admin/list.php');
+        const data = await response.json();
+        
+        if (data.success && data.articles) {
+          // Transform API data to match dashboard format
+          const transformedArticles = data.articles.map((article: any) => ({
+            id: article.id,
+            title: article.title,
+            slug: article.slug,
+            excerpt: article.excerpt,
+            category: article.category,
+            status: article.status,
+            author: article.author,
+            created_at: article.created_at,
+            views: article.views
+          }));
+          setArticles(transformedArticles);
+        }
+      } catch (error) {
+        console.error('Error loading articles:', error);
+        // Keep empty array on error
+        setArticles([]);
       }
-    ]);
+    };
+
+    loadArticles();
 
     setCvSubmissions([
       {
@@ -230,6 +234,31 @@ const AdminDashboardEnhanced = () => {
   const downloadCV = (filename: string) => {
     // In production, this would download from your server
     alert(`Downloading ${filename}...`);
+  };
+
+  const handleDeleteArticle = async (slug: string) => {
+    if (!confirm('Are you sure you want to delete this article? This action cannot be undone.')) {
+      return;
+    }
+
+    try {
+      const response = await fetch(`https://skilltude.com/api/blog/admin/delete.php?slug=${slug}`, {
+        method: 'DELETE'
+      });
+      
+      const data = await response.json();
+      
+      if (data.success) {
+        // Remove article from list
+        setArticles(prev => prev.filter(article => article.slug !== slug));
+        alert('Article deleted successfully!');
+      } else {
+        alert(`Error: ${data.error || 'Failed to delete article'}`);
+      }
+    } catch (error) {
+      console.error('Delete error:', error);
+      alert('Error deleting article. Please try again.');
+    }
   };
 
   const filteredItems = () => {
@@ -720,9 +749,17 @@ const AdminDashboardEnhanced = () => {
                               </Button>
                             )}
                             <Button variant="ghost" size="sm" asChild>
-                              <Link to={`/admin/articles/edit/${item.id}`}>
+                              <Link to={`/admin/articles/edit/${item.slug}`}>
                                 <Edit className="w-4 h-4" />
                               </Link>
+                            </Button>
+                            <Button 
+                              variant="ghost" 
+                              size="sm"
+                              onClick={() => handleDeleteArticle(item.slug)}
+                              className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                            >
+                              <Trash2 className="w-4 h-4" />
                             </Button>
                           </>
                         )}

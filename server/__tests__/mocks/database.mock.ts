@@ -8,8 +8,10 @@ import { vi } from 'vitest';
 // In-memory storage for test data
 const cvSubmissions: Map<string, any> = new Map();
 const adminUsers: Map<string, any> = new Map();
+const blogArticles: Map<number, any> = new Map();
 let cvAutoIncrementId = 1;
 let adminAutoIncrementId = 1;
+let blogAutoIncrementId = 1;
 
 // Mock connection object
 const createMockConnection = () => ({
@@ -77,6 +79,139 @@ const createMockConnection = () => ({
     
     // Handle SELECT queries
     if (sqlUpper.startsWith('SELECT')) {
+      // Blog articles select
+      if (sql.includes('blog_articles')) {
+        let results = Array.from(blogArticles.values());
+        
+        // Filter by status (published only) - MUST be first
+        if (sql.includes("status = 'published'") || (sql.includes('status = ?') && params)) {
+          results = results.filter(r => r.status === 'published');
+        }
+        
+        // Filter by slug
+        if (sql.includes('slug = ?') && params) {
+          const slug = params[0];
+          results = results.filter(r => r.slug === slug);
+          
+          // Join with admin_users for author info
+          if (results.length > 0 && sql.includes('admin_users')) {
+            results = results.map(article => {
+              const author = Array.from(adminUsers.values()).find(u => u.id === article.author_id);
+              return {
+                ...article,
+                author_id: author?.id || article.author_id,
+                author_first_name: author?.first_name || 'Unknown',
+                author_last_name: author?.last_name || 'Author',
+                author_email: author?.email || '',
+              };
+            });
+          }
+          
+          return [results, {}];
+        }
+        
+        // Filter by category
+        if (sql.includes('category = ?') && params) {
+          // Find the category parameter
+          let categoryParam = null;
+          if (sql.includes('id != ?')) {
+            // For related articles query: category is first param, id is second
+            categoryParam = params[0];
+          } else {
+            // For regular category filter
+            categoryParam = params.find(p => typeof p === 'string' && p !== '%' && !p.includes('%'));
+          }
+          if (categoryParam) {
+            results = results.filter(r => r.category === categoryParam);
+          }
+        }
+        
+        // Filter by search term
+        if (sql.includes('LIKE ?') && params) {
+          const searchPattern = params.find(p => typeof p === 'string' && p.includes('%'));
+          if (searchPattern) {
+            const searchTerm = searchPattern.replace(/%/g, '').toLowerCase();
+            results = results.filter(r => 
+              r.title?.toLowerCase().includes(searchTerm) ||
+              r.excerpt?.toLowerCase().includes(searchTerm) ||
+              r.content?.toLowerCase().includes(searchTerm)
+            );
+          }
+        }
+        
+        // Exclude specific article (for related articles)
+        if (sql.includes('id != ?') && params) {
+          // Find the id parameter (usually second param after category)
+          const excludeId = params[1] || params[0];
+          if (excludeId) {
+            results = results.filter(r => r.id !== excludeId);
+          }
+        }
+        
+        // Handle DISTINCT category queries
+        if (sqlUpper.includes('DISTINCT') && sql.includes('category')) {
+          // Only include categories from published articles
+          const publishedResults = results.filter(r => r.status === 'published');
+          const uniqueCategories = new Set<string>();
+          publishedResults.forEach(r => {
+            if (r.category) uniqueCategories.add(r.category);
+          });
+          
+          return [
+            Array.from(uniqueCategories).map(cat => ({
+              name: cat,
+              slug: cat.toLowerCase().replace(/\s+/g, '-'),
+              description: null,
+              color: '#4F46E5',
+            })),
+            {}
+          ];
+        }
+        
+        // Order by published_at DESC
+        if (sql.includes('ORDER BY') && sql.includes('published_at DESC')) {
+          results.sort((a, b) => {
+            const dateA = a.published_at ? new Date(a.published_at).getTime() : 0;
+            const dateB = b.published_at ? new Date(b.published_at).getTime() : 0;
+            return dateB - dateA;
+          });
+        }
+        
+        // Apply OFFSET first, then LIMIT
+        if (sql.includes('OFFSET ?') && params) {
+          const offsetIndex = params.length - 1;
+          const offset = params[offsetIndex];
+          if (typeof offset === 'number') {
+            results = results.slice(offset);
+          }
+        }
+        
+        // Apply LIMIT
+        if (sql.includes('LIMIT ?') && params) {
+          const limitIndex = sql.includes('OFFSET') ? params.length - 2 : params.length - 1;
+          const limit = params[limitIndex];
+          if (typeof limit === 'number') {
+            results = results.slice(0, limit);
+          }
+        }
+        
+        // Join with admin_users for author info (if not already done)
+        if (sql.includes('admin_users') && results.length > 0 && !results[0].author_first_name) {
+          results = results.map(article => {
+            const author = Array.from(adminUsers.values()).find(u => u.id === article.author_id);
+            return {
+              ...article,
+              author_id: author?.id || article.author_id,
+              author_first_name: author?.first_name || 'Unknown',
+              author_last_name: author?.last_name || 'Author',
+              author_email: author?.email || '',
+            };
+          });
+        }
+        
+        return [results, {}];
+      }
+      
       // Admin users select
       if (sql.includes('admin_users')) {
         // Select by email
@@ -174,6 +309,21 @@ const createMockConnection = () => ({
     
     // Handle UPDATE queries
     if (sqlUpper.startsWith('UPDATE')) {
+      // Blog articles update (view count)
+      if (sql.includes('blog_articles')) {
+        if (sql.includes('views = views + 1')) {
+          const id = params?.[0];
+          const article = blogArticles.get(id);
+          if (article) {
+            article.views = (article.views || 0) + 1;
+            article.updated_at = new Date();
+            blogArticles.set(id, article);
+            return [{ affectedRows: 1 }, {}];
+          }
+        }
+        return [{ affectedRows: 0 }, {}];
+      }
+      
       if (sql.includes('cv_submissions')) {
         const id = params?.[params.length - 1];
         
@@ -357,8 +507,10 @@ vi.mock('../../utils/database', () => ({
 export const clearTestData = () => {
   cvSubmissions.clear();
   adminUsers.clear();
+  blogArticles.clear();
   cvAutoIncrementId = 1;
   adminAutoIncrementId = 1;
+  blogAutoIncrementId = 1;
 };
 
 export const getTestData = () => Array.from(cvSubmissions.values());
@@ -377,3 +529,52 @@ export const getTestDataById = (id: number) => {
 export const getAllTestData = () => Array.from(cvSubmissions.values());
 
 export const getAdminUsers = () => Array.from(adminUsers.values());
+
+// Blog article helpers
+export const addTestBlogArticle = (data: any) => {
+  const id = blogAutoIncrementId++;
+  const article = {
+    id,
+    uuid: data.uuid || `blog-uuid-${id}`,
+    title: data.title,
+    slug: data.slug,
+    excerpt: data.excerpt,
+    content: data.content,
+    featured_image_url: data.featured_image_url || null,
+    category: data.category,
+    tags: data.tags || '[]',
+    author_id: data.author_id,
+    status: data.status || 'draft',
+    published_at: data.published_at || null,
+    created_at: data.created_at || new Date(),
+    updated_at: data.updated_at || new Date(),
+    views: data.views || 0,
+  };
+  
+  blogArticles.set(id, article);
+  return id;
+};
+
+export const addTestAdminUser = (data: any) => {
+  const id = adminAutoIncrementId++;
+  const user = {
+    id,
+    uuid: data.uuid || `admin-uuid-${id}`,
+    username: data.username || data.email,
+    email: data.email,
+    password_hash: data.password_hash,
+    first_name: data.first_name,
+    last_name: data.last_name,
+    role: data.role || 'admin',
+    status: data.status || 'active',
+    created_at: data.created_at || new Date(),
+    updated_at: data.updated_at || new Date(),
+  };
+  
+  adminUsers.set(user.email, user);
+  return id;
+};
+
+export const getBlogArticles = () => Array.from(blogArticles.values());
+
+export const getBlogArticleById = (id: number) => blogArticles.get(id);

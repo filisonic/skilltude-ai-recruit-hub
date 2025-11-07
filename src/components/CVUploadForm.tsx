@@ -165,8 +165,13 @@ export default function CVUploadForm({
         });
       }, 200);
 
-      const response = await fetch("/api/cv/upload", {
+      // Use environment variable for API URL, fallback to relative URL for development
+      const API_URL = import.meta.env.VITE_API_URL || '';
+      const response = await fetch(`${API_URL}/api/cv/upload`, {
         method: "POST",
+        headers: {
+          'X-Requested-With': 'XMLHttpRequest',
+        },
         body: formData,
       });
 
