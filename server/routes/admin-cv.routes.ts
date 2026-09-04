@@ -127,7 +127,7 @@ function formatSubmission(row: any): CVSubmission {
     adminNotes: row.admin_notes,
     ipAddress: row.ip_address,
     userAgent: row.user_agent,
-    createdAt: row.created_at,
+    createdAt: row.created_at || row.submitted_at,
     updatedAt: row.updated_at,
   };
 }
@@ -214,7 +214,7 @@ router.get(
           email_sent_at, email_opened_at,
           converted_to_premium, conversion_date,
           submitted_at, reviewed_at, reviewed_by, admin_notes,
-          ip_address, user_agent, created_at, updated_at
+          ip_address, user_agent, submitted_at, updated_at
          FROM cv_submissions
          ${whereClause}
          ${orderByClause}
@@ -390,7 +390,7 @@ router.get(
           email_sent_at, email_opened_at,
           converted_to_premium, conversion_date,
           submitted_at, reviewed_at, reviewed_by, admin_notes,
-          ip_address, user_agent, created_at, updated_at
+          ip_address, user_agent, submitted_at, updated_at
          FROM cv_submissions
          WHERE id = ?`,
         [submissionId]
@@ -551,7 +551,7 @@ router.put(
           email_sent_at, email_opened_at,
           converted_to_premium, conversion_date,
           submitted_at, reviewed_at, reviewed_by, admin_notes,
-          ip_address, user_agent, created_at, updated_at
+          ip_address, user_agent, submitted_at, updated_at
          FROM cv_submissions
          WHERE id = ?`,
         [submissionId]
