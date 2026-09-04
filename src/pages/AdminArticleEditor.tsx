@@ -20,6 +20,7 @@ import {
   Type,
   Code
 } from 'lucide-react';
+import { apiUrl } from '@/lib/api';
 
 interface ArticleData {
   title: string;
@@ -63,18 +64,17 @@ const AdminArticleEditor = () => {
   ];
 
   useEffect(() => {
-    // Check if admin is logged in
     const isLoggedIn = localStorage.getItem('admin_logged_in');
-    if (!isLoggedIn) {
+    const token = localStorage.getItem('admin_token');
+    if (!isLoggedIn || !token) {
       navigate('/admin/login');
       return;
     }
 
-    // If editing, load article data from API
     if (isEditing && id) {
       const loadArticle = async () => {
         try {
-          const response = await fetch(`https://skilltude.com/api/blog/article.php?slug=${id}`);
+          const response = await fetch(apiUrl(`/api/blog/articles/${encodeURIComponent(id)}`));
           const data = await response.json();
           
           if (data.success && data.article) {
@@ -86,8 +86,8 @@ const AdminArticleEditor = () => {
               content: article.content,
               category: article.category,
               tags: article.tags || [],
-              featured_image_url: article.image || '',
-              status: article.published_at ? 'published' : 'draft'
+              featured_image_url: article.featured_image_url || article.image || '',
+              status: article.status || (article.published_at ? 'published' : 'draft')
             });
           } else {
             setMessage('Error: Article not found');
@@ -165,32 +165,11 @@ const AdminArticleEditor = () => {
           : null
       };
 
-      const apiUrl = isEditing 
-        ? 'https://skilltude.com/api/blog/admin/update.php'
-        : 'https://skilltude.com/api/blog/admin/create.php';
-      
-      const method = isEditing ? 'PUT' : 'POST';
-
-      const response = await fetch(apiUrl, {
-        method,
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(articleData)
-      });
-
-      const result = await response.json();
-
-      if (result.success) {
-        setMessage(`Article ${status === 'published' ? 'published' : 'saved as draft'} successfully!`);
-        
-        // Redirect to dashboard after a delay
-        setTimeout(() => {
-          navigate('/admin/dashboard');
-        }, 2000);
-      } else {
-        setMessage(`Error: ${result.error || 'Failed to save article'}`);
-      }
+      // Blog write APIs were Hostinger PHP and are not deployed.
+      // Reading works via Render; create/update needs a Node admin endpoint next.
+      setMessage('Saving articles is temporarily unavailable. Viewing/listing works via the live API; create/update needs a Render write endpoint.');
+      setIsSaving(false);
+      return;
 
     } catch (error) {
       console.error('Save error:', error);

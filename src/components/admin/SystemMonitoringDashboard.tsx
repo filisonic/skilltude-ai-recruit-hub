@@ -29,6 +29,7 @@ import {
   Pie,
   Cell,
 } from 'recharts';
+import { adminFetch } from '@/lib/api';
 
 interface SystemMetrics {
   uploadMetrics: {
@@ -95,9 +96,7 @@ export function SystemMonitoringDashboard() {
 
   const fetchMetrics = async () => {
     try {
-      const response = await fetch('/api/monitoring/metrics', {
-        credentials: 'include',
-      });
+      const response = await adminFetch('/api/monitoring/metrics');
 
       if (!response.ok) {
         throw new Error('Failed to fetch metrics');
@@ -113,9 +112,7 @@ export function SystemMonitoringDashboard() {
 
   const fetchHealth = async () => {
     try {
-      const response = await fetch('/api/monitoring/health', {
-        credentials: 'include',
-      });
+      const response = await adminFetch('/api/monitoring/health');
 
       if (!response.ok) {
         throw new Error('Failed to fetch health status');
@@ -130,9 +127,7 @@ export function SystemMonitoringDashboard() {
 
   const fetchTimeSeries = async (days: number = 30) => {
     try {
-      const response = await fetch(`/api/monitoring/timeseries?days=${days}`, {
-        credentials: 'include',
-      });
+      const response = await adminFetch(`/api/monitoring/timeseries?days=${days}`);
 
       if (!response.ok) {
         throw new Error('Failed to fetch time series data');

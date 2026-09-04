@@ -27,6 +27,7 @@ import {
   Phone,
   MapPin
 } from 'lucide-react';
+import { adminFetch } from '@/lib/api';
 
 interface BlogArticle {
   id: number;
@@ -84,37 +85,41 @@ const AdminDashboardEnhanced = () => {
     const isLoggedIn = localStorage.getItem('admin_logged_in');
     const adminUser = localStorage.getItem('admin_user');
 
-    if (!isLoggedIn || !adminUser) {
+    if (!isLoggedIn || !adminUser || !localStorage.getItem('admin_token')) {
       navigate('/admin/login');
       return;
     }
 
     setUser(JSON.parse(adminUser));
 
-    // Load real articles from admin API (includes drafts)
+    // Load articles from Render blog API
     const loadArticles = async () => {
       try {
-        const response = await fetch('https://skilltude.com/api/blog/admin/list.php');
+        const response = await adminFetch('/api/blog/articles');
+        const contentType = response.headers.get('content-type') || '';
+
+        if (!contentType.includes('application/json')) {
+          throw new Error('Blog API returned non-JSON (misconfigured URL)');
+        }
+
         const data = await response.json();
         
         if (data.success && data.articles) {
-          // Transform API data to match dashboard format
           const transformedArticles = data.articles.map((article: any) => ({
             id: article.id,
             title: article.title,
             slug: article.slug,
             excerpt: article.excerpt,
             category: article.category,
-            status: article.status,
-            author: article.author,
-            created_at: article.created_at,
-            views: article.views
+            status: article.status || (article.published_at ? 'published' : 'draft'),
+            author: article.author_name || article.author || 'SkillTude Team',
+            created_at: article.created_at || article.published_at || '',
+            views: article.views || 0
           }));
           setArticles(transformedArticles);
         }
       } catch (error) {
         console.error('Error loading articles:', error);
-        // Keep empty array on error
         setArticles([]);
       }
     };
@@ -210,6 +215,7 @@ const AdminDashboardEnhanced = () => {
   }, [navigate]);
 
   const handleLogout = () => {
+    localStorage.removeItem('admin_token');
     localStorage.removeItem('admin_logged_in');
     localStorage.removeItem('admin_user');
     navigate('/admin/login');
@@ -236,29 +242,8 @@ const AdminDashboardEnhanced = () => {
     alert(`Downloading ${filename}...`);
   };
 
-  const handleDeleteArticle = async (slug: string) => {
-    if (!confirm('Are you sure you want to delete this article? This action cannot be undone.')) {
-      return;
-    }
-
-    try {
-      const response = await fetch(`https://skilltude.com/api/blog/admin/delete.php?slug=${slug}`, {
-        method: 'DELETE'
-      });
-      
-      const data = await response.json();
-      
-      if (data.success) {
-        // Remove article from list
-        setArticles(prev => prev.filter(article => article.slug !== slug));
-        alert('Article deleted successfully!');
-      } else {
-        alert(`Error: ${data.error || 'Failed to delete article'}`);
-      }
-    } catch (error) {
-      console.error('Delete error:', error);
-      alert('Error deleting article. Please try again.');
-    }
+  const handleDeleteArticle = async (_slug: string) => {
+    alert('Article delete is not available on the live API yet. Contact your developer to enable it on Render.');
   };
 
   const filteredItems = () => {

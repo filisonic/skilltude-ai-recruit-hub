@@ -14,6 +14,7 @@ import {
   Loader2,
   TrendingUp
 } from 'lucide-react';
+import { adminFetch } from '@/lib/api';
 
 interface CVSubmission {
   id: number;
@@ -78,18 +79,18 @@ const CVSubmissionsList: React.FC<CVSubmissionsListProps> = ({ onViewDetails }) 
         params.append('search', searchTerm);
       }
       
-      const response = await fetch(`/api/admin/cv-submissions?${params.toString()}`, {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        credentials: 'include',
-      });
-      
-      if (!response.ok) {
-        throw new Error('Failed to fetch CV submissions');
+      const response = await adminFetch(`/api/admin/cv-submissions?${params.toString()}`);
+      const contentType = response.headers.get('content-type') || '';
+
+      if (!contentType.includes('application/json')) {
+        throw new Error('API returned a non-JSON response. Admin API URL is misconfigured.');
       }
       
       const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data?.error || 'Failed to fetch CV submissions');
+      }
       
       setSubmissions(data.submissions);
       setTotal(data.total);
@@ -119,9 +120,7 @@ const CVSubmissionsList: React.FC<CVSubmissionsListProps> = ({ onViewDetails }) 
 
   const handleDownload = async (id: number, firstName: string, lastName: string) => {
     try {
-      const response = await fetch(`/api/admin/cv-submissions/${id}/download`, {
-        credentials: 'include',
-      });
+      const response = await adminFetch(`/api/admin/cv-submissions/${id}/download`);
       
       if (!response.ok) {
         throw new Error('Failed to download CV');

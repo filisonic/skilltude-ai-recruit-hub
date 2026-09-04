@@ -26,8 +26,9 @@ const AdminCVManagement = () => {
     // Check if admin is logged in
     const isLoggedIn = localStorage.getItem('admin_logged_in');
     const adminUser = localStorage.getItem('admin_user');
+    const token = localStorage.getItem('admin_token');
 
-    if (!isLoggedIn || !adminUser) {
+    if (!isLoggedIn || !adminUser || !token) {
       navigate('/admin/login');
       return;
     }
@@ -36,6 +37,7 @@ const AdminCVManagement = () => {
   }, [navigate]);
 
   const handleLogout = () => {
+    localStorage.removeItem('admin_token');
     localStorage.removeItem('admin_logged_in');
     localStorage.removeItem('admin_user');
     navigate('/admin/login');

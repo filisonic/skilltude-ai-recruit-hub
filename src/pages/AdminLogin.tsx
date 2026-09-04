@@ -9,9 +9,9 @@ import {
   User, 
   Shield, 
   AlertCircle,
-  CheckCircle,
   ArrowLeft
 } from 'lucide-react';
+import { apiUrl } from '@/lib/api';
 
 const AdminLogin = () => {
   const [formData, setFormData] = useState({
@@ -29,7 +29,6 @@ const AdminLogin = () => {
       ...prev,
       [name]: value
     }));
-    // Clear error when user starts typing
     if (error) setError('');
   };
 
@@ -39,32 +38,28 @@ const AdminLogin = () => {
     setError('');
 
     try {
-      // For now, simulate login with demo credentials
-      // In production, this would connect to your Hostinger database
-      if (formData.username === 'admin' && formData.password === 'admin123') {
-        // Store admin session (in production, use proper JWT tokens)
-        localStorage.setItem('admin_logged_in', 'true');
-        localStorage.setItem('admin_user', JSON.stringify({
-          id: 1,
-          username: 'admin',
-          email: 'admin@skilltude.com',
-          first_name: 'Admin',
-          last_name: 'User',
-          role: 'super_admin'
-        }));
-        
-        // Show success message briefly
-        setError('');
-        
-        // Redirect to admin dashboard
-        setTimeout(() => {
-          navigate('/admin/dashboard');
-        }, 1000);
-      } else {
-        setError('Invalid username or password');
+      const response = await fetch(apiUrl('/api/admin/login'), {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          username: formData.username.trim(),
+          password: formData.password,
+        }),
+      });
+
+      const data = await response.json().catch(() => null);
+
+      if (!response.ok || !data?.success || !data?.token) {
+        throw new Error(data?.error || 'Invalid username or password');
       }
+
+      localStorage.setItem('admin_token', data.token);
+      localStorage.setItem('admin_logged_in', 'true');
+      localStorage.setItem('admin_user', JSON.stringify(data.user));
+
+      navigate('/admin/dashboard');
     } catch (err) {
-      setError('Login failed. Please try again.');
+      setError(err instanceof Error ? err.message : 'Login failed. Please try again.');
     } finally {
       setIsLoading(false);
     }
@@ -79,114 +74,89 @@ const AdminLogin = () => {
             to="/" 
             className="inline-flex items-center gap-2 text-white/80 hover:text-white transition-colors"
           >
-            <ArrowLeft className="w-4 h-4" />
-            <span>Back to SkillTude</span>
+            <ArrowLeft className="h-4 w-4" />
+            Back to SkillTude
           </Link>
         </div>
 
-        <Card className="bg-white/95 backdrop-blur-sm border-0 shadow-2xl">
-          <CardHeader className="text-center pb-6">
-            <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center">
-              <Shield className="w-8 h-8 text-white" />
+        <Card className="border-0 shadow-2xl bg-white/95 backdrop-blur">
+          <CardHeader className="text-center pb-2">
+            <div className="mx-auto mb-4 w-14 h-14 rounded-full bg-blue-100 flex items-center justify-center">
+              <Shield className="h-7 w-7 text-blue-700" />
             </div>
-            <CardTitle className="text-2xl font-bold text-gray-900">Admin Portal</CardTitle>
-            <p className="text-gray-600 mt-2">
+            <CardTitle className="text-2xl">Admin Portal</CardTitle>
+            <p className="text-sm text-muted-foreground mt-2">
               Sign in to manage blog articles and content
             </p>
           </CardHeader>
-
-          <CardContent className="space-y-6">
+          <CardContent>
             <form onSubmit={handleSubmit} className="space-y-4">
               {error && (
-                <div className={`p-4 rounded-xl border flex items-center gap-3 ${
-                  error.includes('Invalid') 
-                    ? 'bg-red-50 border-red-200 text-red-700' 
-                    : 'bg-green-50 border-green-200 text-green-700'
-                }`}>
-                  {error.includes('Invalid') ? (
-                    <AlertCircle className="w-5 h-5 flex-shrink-0" />
-                  ) : (
-                    <CheckCircle className="w-5 h-5 flex-shrink-0" />
-                  )}
-                  <span className="text-sm font-medium">{error}</span>
+                <div className="flex items-start gap-2 rounded-md bg-red-50 text-red-700 p-3 text-sm">
+                  <AlertCircle className="h-4 w-4 mt-0.5 shrink-0" />
+                  <span>{error}</span>
                 </div>
               )}
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+              <div className="space-y-2">
+                <label htmlFor="username" className="text-sm font-medium">
                   Username
                 </label>
                 <div className="relative">
-                  <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                  <User className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
                   <input
-                    type="text"
+                    id="username"
                     name="username"
-                    required
-                    className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-                    placeholder="Enter your username"
+                    type="text"
+                    autoComplete="username"
                     value={formData.username}
                     onChange={handleInputChange}
+                    className="w-full rounded-md border border-gray-300 pl-10 pr-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    required
                   />
                 </div>
               </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+              <div className="space-y-2">
+                <label htmlFor="password" className="text-sm font-medium">
                   Password
                 </label>
                 <div className="relative">
-                  <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                  <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
                   <input
-                    type={showPassword ? 'text' : 'password'}
+                    id="password"
                     name="password"
-                    required
-                    className="w-full pl-10 pr-12 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-                    placeholder="Enter your password"
+                    type={showPassword ? 'text' : 'password'}
+                    autoComplete="current-password"
                     value={formData.password}
                     onChange={handleInputChange}
+                    className="w-full rounded-md border border-gray-300 pl-10 pr-10 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    required
                   />
                   <button
                     type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+                    onClick={() => setShowPassword((v) => !v)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                    aria-label={showPassword ? 'Hide password' : 'Show password'}
                   >
-                    {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                    {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                   </button>
                 </div>
               </div>
 
-              <Button
-                type="submit"
-                disabled={isLoading}
-                className="w-full bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white py-3 rounded-xl text-lg font-semibold transition-all duration-300 shadow-lg hover:shadow-xl"
-              >
-                {isLoading ? (
-                  <div className="flex items-center gap-2">
-                    <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                    <span>Signing in...</span>
-                  </div>
-                ) : (
-                  'Sign In'
-                )}
+              <Button type="submit" className="w-full" disabled={isLoading}>
+                {isLoading ? 'Signing in...' : 'Sign In'}
               </Button>
             </form>
 
-
-
-            <div className="text-center">
-              <p className="text-xs text-gray-500">
-                Forgot your credentials? Contact your system administrator.
-              </p>
-            </div>
+            <p className="text-xs text-center text-muted-foreground mt-6">
+              Forgot your credentials? Contact your system administrator.
+            </p>
+            <p className="text-xs text-center text-muted-foreground mt-2">
+              🔒 This is a secure admin portal. All access is logged.
+            </p>
           </CardContent>
         </Card>
-
-        {/* Security notice */}
-        <div className="mt-6 text-center">
-          <p className="text-white/60 text-sm">
-            🔒 This is a secure admin portal. All access is logged.
-          </p>
-        </div>
       </div>
     </div>
   );

@@ -20,6 +20,7 @@ import {
   AlertTriangle
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { adminFetch } from '@/lib/api';
 
 interface EmailQueueStats {
   pending: number;
@@ -65,9 +66,7 @@ export function EmailQueueMonitor() {
       setLoading(true);
 
       // Fetch queue statistics
-      const statsResponse = await fetch('/api/admin/cv-submissions/email-queue/stats', {
-        credentials: 'include',
-      });
+      const statsResponse = await adminFetch('/api/admin/cv-submissions/email-queue/stats');
 
       if (!statsResponse.ok) {
         throw new Error('Failed to fetch queue statistics');
@@ -78,9 +77,7 @@ export function EmailQueueMonitor() {
       setMetrics(statsData.metrics);
 
       // Fetch failed emails
-      const failedResponse = await fetch('/api/admin/cv-submissions/email-queue/failed?limit=20', {
-        credentials: 'include',
-      });
+      const failedResponse = await adminFetch('/api/admin/cv-submissions/email-queue/failed?limit=20');
 
       if (!failedResponse.ok) {
         throw new Error('Failed to fetch failed emails');
@@ -111,9 +108,8 @@ export function EmailQueueMonitor() {
     try {
       setProcessing(true);
 
-      const response = await fetch('/api/admin/cv-submissions/email-queue/process', {
+      const response = await adminFetch('/api/admin/cv-submissions/email-queue/process', {
         method: 'POST',
-        credentials: 'include',
       });
 
       if (!response.ok) {
@@ -145,9 +141,8 @@ export function EmailQueueMonitor() {
     try {
       setRetryingId(submissionId);
 
-      const response = await fetch(`/api/admin/cv-submissions/${submissionId}/retry-email`, {
+      const response = await adminFetch(`/api/admin/cv-submissions/${submissionId}/retry-email`, {
         method: 'POST',
-        credentials: 'include',
       });
 
       if (!response.ok) {

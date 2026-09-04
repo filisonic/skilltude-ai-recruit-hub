@@ -92,8 +92,10 @@ app.get('/api/health', (req: Request, res: Response) => {
 import cvRoutes from './routes/cv.routes.js';
 app.use('/api/cv', cvRoutes);
 
-// Admin CV management routes
+// Admin auth + CV management routes
+import adminAuthRoutes from './routes/admin-auth.routes.js';
 import adminCvRoutes from './routes/admin-cv.routes.js';
+app.use('/api/admin', adminAuthRoutes);
 app.use('/api/admin', adminCvRoutes);
 
 // Monitoring routes

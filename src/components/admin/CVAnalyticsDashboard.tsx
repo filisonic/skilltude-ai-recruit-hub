@@ -12,6 +12,7 @@ import {
   ArrowUp,
   ArrowDown
 } from 'lucide-react';
+import { adminFetch } from '@/lib/api';
 
 interface OverallStats {
   totalSubmissions: number;
@@ -76,15 +77,19 @@ const CVAnalyticsDashboard: React.FC = () => {
     setError(null);
     
     try {
-      const response = await fetch('/api/admin/cv-submissions/analytics', {
-        credentials: 'include',
-      });
-      
-      if (!response.ok) {
-        throw new Error('Failed to fetch analytics data');
+      const response = await adminFetch('/api/admin/cv-submissions/analytics');
+      const contentType = response.headers.get('content-type') || '';
+
+      if (!contentType.includes('application/json')) {
+        throw new Error('API returned a non-JSON response. Admin API URL is misconfigured.');
       }
-      
+
       const analyticsData = await response.json();
+
+      if (!response.ok) {
+        throw new Error(analyticsData?.error || 'Failed to fetch analytics data');
+      }
+
       setData(analyticsData);
       
     } catch (err) {

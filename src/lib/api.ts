@@ -1,38 +1,62 @@
 /**
  * Centralized API configuration for the application
- * 
- * This module provides a single source of truth for API URLs and endpoints.
- * It uses environment variables with fallback values for development.
+ *
+ * Frontend is hosted on Hostinger; API runs on Render.
+ * Always call the Render base URL — relative /api/* paths hit Hostinger HTML and break JSON.parse.
  */
 
-// CV/Upload API URL (Render server - keep unchanged)
-export const API_URL = 'https://skilltude-ai-recruit-hub.onrender.com';
+export const API_URL = (
+  import.meta.env.VITE_API_URL ||
+  'https://skilltude-ai-recruit-hub.onrender.com'
+).replace(/\/$/, '');
 
-// Blog API URL (Simple PHP on Hostinger)
-export const BLOG_API_URL = 'https://skilltude.com';
+export function apiUrl(path: string): string {
+  const normalized = path.startsWith('/') ? path : `/${path}`;
+  return `${API_URL}${normalized}`;
+}
+
+export function getAdminToken(): string | null {
+  return localStorage.getItem('admin_token');
+}
+
+export function getAuthHeaders(extra: HeadersInit = {}): HeadersInit {
+  const token = getAdminToken();
+  return {
+    'Content-Type': 'application/json',
+    ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    ...extra,
+  };
+}
+
+export async function adminFetch(
+  path: string,
+  init: RequestInit = {}
+): Promise<Response> {
+  const headers = new Headers(getAuthHeaders());
+  if (init.headers) {
+    const extra = new Headers(init.headers);
+    extra.forEach((value, key) => headers.set(key, value));
+  }
+
+  // Let the browser set Content-Type for FormData / blobs
+  if (init.body instanceof FormData) {
+    headers.delete('Content-Type');
+  }
+
+  return fetch(apiUrl(path), {
+    ...init,
+    headers,
+  });
+}
 
 /**
- * Blog API endpoints
- * 
- * Provides methods to construct URLs for blog-related API calls
+ * Blog API endpoints (Node backend on Render)
  */
 export const blogApi = {
-  /**
-   * Get URL for fetching all blog articles
-   * @returns Full URL for the articles list endpoint
-   */
-  getArticles: (): string => `${BLOG_API_URL}/api/blog/articles.php`,
-  
-  /**
-   * Get URL for fetching a single blog article by slug
-   * @param slug - The article slug
-   * @returns Full URL for the specific article endpoint
-   */
-  getArticle: (slug: string): string => `${BLOG_API_URL}/api/blog/article.php?slug=${slug}`,
-  
-  /**
-   * Get URL for fetching all blog categories
-   * @returns Full URL for the categories endpoint
-   */
-  getCategories: (): string => `${BLOG_API_URL}/api/blog/categories.php`,
+  getArticles: (): string => apiUrl('/api/blog/articles'),
+  getArticle: (slug: string): string => apiUrl(`/api/blog/articles/${encodeURIComponent(slug)}`),
+  getCategories: (): string => apiUrl('/api/blog/categories'),
 };
+
+// Backwards-compatible alias used by older imports
+export const BLOG_API_URL = API_URL;

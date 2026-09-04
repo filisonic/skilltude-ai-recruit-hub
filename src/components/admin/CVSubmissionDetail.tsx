@@ -18,6 +18,7 @@ import {
   TrendingUp,
   Award
 } from 'lucide-react';
+import { adminFetch } from '@/lib/api';
 
 interface CVAnalysisResult {
   overallScore: number;
@@ -95,15 +96,19 @@ const CVSubmissionDetail: React.FC<CVSubmissionDetailProps> = ({
     setError(null);
     
     try {
-      const response = await fetch(`/api/admin/cv-submissions/${submissionId}`, {
-        credentials: 'include',
-      });
-      
-      if (!response.ok) {
-        throw new Error('Failed to fetch submission details');
+      const response = await adminFetch(`/api/admin/cv-submissions/${submissionId}`);
+      const contentType = response.headers.get('content-type') || '';
+
+      if (!contentType.includes('application/json')) {
+        throw new Error('API returned a non-JSON response. Admin API URL is misconfigured.');
       }
-      
+
       const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data?.error || 'Failed to fetch submission details');
+      }
+
       setSubmission(data);
       setStatus(data.status);
       setAdminNotes(data.adminNotes || '');
@@ -124,24 +129,21 @@ const CVSubmissionDetail: React.FC<CVSubmissionDetailProps> = ({
     setError(null);
     
     try {
-      const response = await fetch(`/api/admin/cv-submissions/${submissionId}`, {
+      const response = await adminFetch(`/api/admin/cv-submissions/${submissionId}`, {
         method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        credentials: 'include',
         body: JSON.stringify({
           status,
           adminNotes,
           convertedToPremium,
         }),
       });
-      
+
+      const data = await response.json().catch(() => null);
+
       if (!response.ok) {
-        throw new Error('Failed to update submission');
+        throw new Error(data?.error || 'Failed to update submission');
       }
-      
-      const data = await response.json();
+
       setSubmission(data.submission);
       
       // Show success message
@@ -165,9 +167,7 @@ const CVSubmissionDetail: React.FC<CVSubmissionDetailProps> = ({
     if (!submission) return;
     
     try {
-      const response = await fetch(`/api/admin/cv-submissions/${submissionId}/download`, {
-        credentials: 'include',
-      });
+      const response = await adminFetch(`/api/admin/cv-submissions/${submissionId}/download`);
       
       if (!response.ok) {
         throw new Error('Failed to download CV');
