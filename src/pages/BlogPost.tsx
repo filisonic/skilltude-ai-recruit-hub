@@ -20,13 +20,13 @@ import {
   Loader2
 } from 'lucide-react';
 import { blogApi } from '@/lib/api';
-import { BlogPostData } from '@/types/blog.types';
+import { normalizeBlogPost, NormalizedBlogPost } from '@/lib/blog';
 import '@/styles/blog-content.css';
 
 const BlogPost = () => {
   const { id } = useParams();
-  const [post, setPost] = useState<BlogPostData | null>(null);
-  const [relatedPosts, setRelatedPosts] = useState<BlogPostData[]>([]);
+  const [post, setPost] = useState<NormalizedBlogPost | null>(null);
+  const [relatedPosts, setRelatedPosts] = useState<NormalizedBlogPost[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -50,8 +50,12 @@ const BlogPost = () => {
       const data = await response.json();
       
       if (data.success && data.article) {
-        setPost(data.article);
-        setRelatedPosts(data.relatedArticles || []);
+        setPost(normalizeBlogPost(data.article));
+        setRelatedPosts(
+          Array.isArray(data.relatedArticles)
+            ? data.relatedArticles.map(normalizeBlogPost)
+            : []
+        );
       } else {
         throw new Error('Invalid response format');
       }
@@ -237,7 +241,7 @@ const BlogPost = () => {
               </div>
               <div className="flex items-center gap-2">
                 <Clock className="w-5 h-5" />
-                <span>{post.readTime}</span>
+                <span>{post.readTime || '5 min read'}</span>
               </div>
               <div className="flex items-center gap-2">
                 <Eye className="w-5 h-5" />
@@ -264,11 +268,11 @@ const BlogPost = () => {
               <div className="lg:col-span-3">
                 <article className="blog-content text-gray-700">
                   <div dangerouslySetInnerHTML={{ 
-                    __html: post.content.startsWith('<') 
-                      ? post.content // Already HTML from rich text editor
+                    __html: (post.content || '').startsWith('<') 
+                      ? (post.content || '') // Already HTML from rich text editor
                       : (() => {
                           // Strip frontmatter from markdown before parsing
-                          let cleaned = post.content.replace(/^---\s*\n[\s\S]*?\n---\s*\n/, '');
+                          let cleaned = (post.content || '').replace(/^---\s*\n[\s\S]*?\n---\s*\n/, '');
                           cleaned = cleaned.replace(/\n---\s*\n\*\*Tags:\*\*[\s\S]*$/, '');
                           // Fix spacing: Convert double-space line breaks to paragraph breaks
                           cleaned = cleaned.replace(/  \n/g, '\n\n');

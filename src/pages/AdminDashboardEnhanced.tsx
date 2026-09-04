@@ -105,17 +105,27 @@ const AdminDashboardEnhanced = () => {
         const data = await response.json();
         
         if (data.success && data.articles) {
-          const transformedArticles = data.articles.map((article: any) => ({
-            id: article.id,
-            title: article.title,
-            slug: article.slug,
-            excerpt: article.excerpt,
-            category: article.category,
-            status: article.status || (article.published_at ? 'published' : 'draft'),
-            author: article.author_name || article.author || 'SkillTude Team',
-            created_at: article.created_at || article.published_at || '',
-            views: article.views || 0
-          }));
+          const transformedArticles = data.articles.map((article: any) => {
+            const authorObj = article.author;
+            const authorName =
+              typeof authorObj === 'string'
+                ? authorObj
+                : [authorObj?.first_name, authorObj?.last_name].filter(Boolean).join(' ').trim() ||
+                  article.author_name ||
+                  'SkillTude Team';
+
+            return {
+              id: article.id,
+              title: article.title,
+              slug: article.slug,
+              excerpt: article.excerpt,
+              category: article.category,
+              status: article.status || (article.published_at ? 'published' : 'draft'),
+              author: authorName === 'Unknown Author' ? 'SkillTude Team' : authorName,
+              created_at: article.created_at || article.published_at || '',
+              views: article.views || 0
+            };
+          });
           setArticles(transformedArticles);
         }
       } catch (error) {

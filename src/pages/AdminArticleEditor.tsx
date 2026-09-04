@@ -21,6 +21,7 @@ import {
   Code
 } from 'lucide-react';
 import { apiUrl } from '@/lib/api';
+import { normalizeBlogPost } from '@/lib/blog';
 
 interface ArticleData {
   title: string;
@@ -78,16 +79,18 @@ const AdminArticleEditor = () => {
           const data = await response.json();
           
           if (data.success && data.article) {
-            const article = data.article;
+            const article = normalizeBlogPost(data.article);
+            const looksMarkdown = !article.content?.trim().startsWith('<');
+            setEditorMode(looksMarkdown ? 'markdown' : 'rich');
             setFormData({
               title: article.title,
               slug: article.slug,
               excerpt: article.excerpt,
-              content: article.content,
+              content: article.content || '',
               category: article.category,
               tags: article.tags || [],
-              featured_image_url: article.featured_image_url || article.image || '',
-              status: article.status || (article.published_at ? 'published' : 'draft')
+              featured_image_url: article.image || '',
+              status: (article.status as ArticleData['status']) || 'draft'
             });
           } else {
             setMessage('Error: Article not found');
@@ -334,11 +337,13 @@ const AdminArticleEditor = () => {
               <CardContent>
                 {editorMode === 'rich' ? (
                   <RichTextEditor
+                    key={`rich-${formData.slug || 'new'}-${formData.content.length > 0}`}
                     content={formData.content}
                     onChange={(html) => setFormData(prev => ({ ...prev, content: html }))}
                   />
                 ) : (
                   <MarkdownEditor
+                    key={`md-${formData.slug || 'new'}-${formData.content.length > 0}`}
                     content={formData.content}
                     onChange={(markdown) => setFormData(prev => ({ ...prev, content: markdown }))}
                   />

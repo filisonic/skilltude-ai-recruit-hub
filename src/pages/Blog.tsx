@@ -8,13 +8,13 @@ import { Link } from 'react-router-dom';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { blogApi } from '@/lib/api';
-import { BlogPost } from '@/types/blog.types';
+import { normalizeBlogPosts, NormalizedBlogPost } from '@/lib/blog';
 
 // Lazy load components that aren't immediately visible
 const LazyImage = lazy(() => import('@/components/LazyImage'));
 
 const Blog = () => {
-  const [posts, setPosts] = useState<BlogPost[]>([]);
+  const [posts, setPosts] = useState<NormalizedBlogPost[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
@@ -34,7 +34,7 @@ const Blog = () => {
       }
       
       const data = await response.json();
-      setPosts(data.articles || []);
+      setPosts(normalizeBlogPosts(data.articles));
     } catch (err) {
       console.error('Error fetching blog posts:', err);
       setError(err instanceof Error ? err.message : 'Failed to load articles. Please try again.');
@@ -162,8 +162,8 @@ const Blog = () => {
                   {!loading && !error && (
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                       {paginatedPosts.map((post) => (
-                      <Card key={post.id} className="overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
-                        <Link to={`/blog/${post.id}`} className="block h-48 overflow-hidden">
+                      <Card key={post.slug || post.id} className="overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+                        <Link to={`/blog/${post.slug}`} className="block h-48 overflow-hidden">
                           <Suspense fallback={
                             <div className="w-full h-full bg-gray-200 animate-pulse flex items-center justify-center">
                               <div className="text-gray-400">Loading...</div>
@@ -185,7 +185,7 @@ const Blog = () => {
                             <span>{post.date}</span>
                           </div>
                           <h3 className="text-xl font-semibold mb-3">
-                            <Link to={`/blog/${post.id}`} className="hover:text-teal-600 transition-colors">
+                            <Link to={`/blog/${post.slug}`} className="hover:text-teal-600 transition-colors">
                               {post.title}
                             </Link>
                           </h3>
@@ -195,7 +195,7 @@ const Blog = () => {
                               <p className="text-gray-900 font-medium">{post.author}</p>
                             </div>
                             <Link 
-                              to={`/blog/${post.id}`}
+                              to={`/blog/${post.slug}`}
                               className="text-teal-600 hover:text-teal-700 text-sm font-medium transition-colors"
                             >
                               Read more →
@@ -288,8 +288,8 @@ const Blog = () => {
                     <h3 className="text-xl font-semibold mb-4">Recent Posts</h3>
                     <ul className="space-y-4">
                       {recentPosts.map((post) => (
-                        <li key={post.id}>
-                          <Link to={`/blog/${post.id}`} className="flex group">
+                        <li key={post.slug || post.id}>
+                          <Link to={`/blog/${post.slug}`} className="flex group">
                             <div className="flex-shrink-0 h-16 w-16 rounded-lg overflow-hidden">
                               <Suspense fallback={<div className="h-full w-full bg-gray-200 animate-pulse" />}>
                                 <LazyImage 

@@ -4,10 +4,10 @@ import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { blogApi } from '@/lib/api';
-import { BlogPost } from '@/types/blog.types';
+import { normalizeBlogPosts, NormalizedBlogPost } from '@/lib/blog';
 
 const BlogPreview = () => {
-  const [posts, setPosts] = useState<BlogPost[]>([]);
+  const [posts, setPosts] = useState<NormalizedBlogPost[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -21,8 +21,7 @@ const BlogPreview = () => {
         }
         
         const data = await response.json();
-        // Get only the 3 most recent posts
-        setPosts((data.articles || []).slice(0, 3));
+        setPosts(normalizeBlogPosts(data.articles).slice(0, 3));
       } catch (err) {
         console.error('Error fetching blog posts:', err);
         setPosts([]);
@@ -51,8 +50,8 @@ const BlogPreview = () => {
         ) : posts.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {posts.map((post) => (
-              <Card key={post.id} className="overflow-hidden card-hover">
-                <Link to={`/blog/${post.id}`} className="block h-48 overflow-hidden">
+              <Card key={post.slug || post.id} className="overflow-hidden card-hover">
+                <Link to={`/blog/${post.slug}`} className="block h-48 overflow-hidden">
                   <img 
                     src={post.image} 
                     alt={post.title} 
@@ -68,7 +67,7 @@ const BlogPreview = () => {
                     <span>{post.date}</span>
                   </div>
                   <h3 className="text-xl font-semibold mb-3">
-                    <Link to={`/blog/${post.id}`} className="hover:text-teal-600 transition-colors">
+                    <Link to={`/blog/${post.slug}`} className="hover:text-teal-600 transition-colors">
                       {post.title}
                     </Link>
                   </h3>
